@@ -1,0 +1,142 @@
+larger_group,species,length,mass_formula,length_reference,mass_formula_reference,notes,alpha,alpha2,beta,modifier,exp,mod,base,tricho
+COPEPODA,Acanthocyclops,NA,#VALUE!,NA,Acanthocyclops vernalis - Rosen 1981. J. Freshwat. Ecol.,,2.227,NA,3.23,NA,Y,NA,NA,NA
+COPEPODA,Acanthocyclops vernalis,0.7,2.841984059,assigned - Balcer,Culver et.al. for C. vernalis females,NA,7.0729,NA,2.5563,NA,NA,NA,Y,NA
+CLADOCERA,acroperus harpae,NA,`'=15.92*(C241^3.84),NA,Dumont et. al. for A. affinis,NA,15.92,NA,3.4,NA,NA,NA,Y,NA
+COPEPODA,aglaodiaptomus clavipes,NA,`'=EXP(1.05 + 2.46*(LOG(J129))),NA,Diaptomus sp. -Persson & Ekbohm 1980. Arch. Hydrobiol.,NA,1.05,NA,2.46,NA,Y,NA,NA,NA
+CLADOCERA,Alona,0.4,'=15.92*(C25^3.84),Balcer for various Alona,Dumont et. al. for A. affinis,NA,15.92,NA,3.84,NA,NA,NA,Y,NA
+CLADOCERA,Alona karau,0.4,'=15.92*(C26^3.84),Balcer for various Alona,Dumont et. al. for A. affinis,NA,15.92,NA,3.84,NA,NA,NA,Y,NA
+ROTIFERA,Anuraeopsis,0.09,0.081,,All rotifer wts are calculated using volume,NA,0.03,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Ascomorpha ecaudis,0.15,2.592,Stemberger,,NA,0.12,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Ascomorpha ovalis,0.09,0.015972,LR,,NA,0.12,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Ascomorpha spp.,0.1,1.5,assigned,formulas from Ruttner-Kolisko,NA,0.12,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Asplanchna spp.,0.46,0.01970709,LR,,NA,0.23,NA,3,39,NA,Y,NA,NA
+CLADOCERA,Bosmina,0.46,0.013574681,Balcer for B.l.,Culver et. al. for Bosmina longirostris,NA,17.7369,NA,2.2291,NA,NA,NA,Y,NA
+CLADOCERA,Bosmina and Eubosmina,0.36,0.063643727,LR,Culver et. al. for Bosmina longirostris,NA,17.7369,NA,2.2291,NA,NA,NA,Y,NA
+CLADOCERA,Bosmina longirostris,0.46,0.013574681,Balcer,Culver et. al. for Bosmina longirostris,NA,17.7369,NA,2.2291,NA,NA,NA,Y,NA
+ROTIFERA,Brachionus,0.18,0.008748,Stemberger,,NA,0.12,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Brachionus quadridentatus ,0.18,0.008748,Stemberger,,NA,0.12,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Brachionus urceolaris,0.18,0.006144,Stemberger,,NA,0.12,NA,3,100,NA,Y,NA,NA
+COPEPODA,Calanoid,0.46,1.70538765,TR,LRL for L. minutus,NA,10.308,NA,1.761,NA,NA,NA,Y,NA
+ROTIFERA,Cephalodella,0.15,#VALUE!,Stemberger,Used Ascomorpha formula,NA,0.12,NA,3,100,NA,Y,NA,NA
+CLADOCERA,Ceriodaphnia,0.85,0.027325972,Balcer for C.l.,Culver et. al. for C. lacustris,NA,4.0216,NA,1.9763,NA,NA,NA,Y,NA
+CLADOCERA,Ceriodaphnia lacustris ,0.85,0.015476017,Balcer,Culver et. al. for C. lacustris,NA,4.0216,NA,1.9763,NA,NA,NA,Y,NA
+CLADOCERA,Chydorid,0.22,0.053679601,TR,Culver et. al. for Chydorus sphaericus,NA,14.0793,NA,1.9796,NA,NA,NA,Y,NA
+CLADOCERA,Chydorus,0.22,0.374159676,TR,Culver et. al. for Chydorus sphaericus,NA,14.0793,NA,1.9796,NA,NA,NA,Y,NA
+ROTIFERA,Collotheca ,0.04,49.4325,LR,,NA,1.8,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Collotheca empty case,NA,,,,NA,NA,NA,NA,NA,NA,NA,NA,NA
+ROTIFERA,Collotheca mutabilis*,0.04,0.31104,LR,,NA,1.8,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Collotheca w/o case,0.04,49.4325,LR,,NA,1.8,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Collurella,0.08,0.015972,Stemberger,,NA,0.12,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Conochiloides sp.*,0.08,0.188942,LR,,NA,0.86,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Conochilus spp.*,0.06,0.08748,LR,,NA,1.2,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Conochilus unicornis,0.06,0.15972,LR for Conochilus,,NA,1.2,NA,3,100,NA,Y,NA,NA
+COPEPODA,Copepod Nauplii,0.16,#VALUE!,LR,Culver et.al. for Calanoid Nauplii,NA,3.0093,NA,1.7064,NA,NA,NA,Y,NA
+COPEPODA,copepodites,NA,'=7.049805*(J999)^2.4,NA,Bottrell 1976 formula for both cyclopoids and calanoids ,NA,7.049805,NA,2.4,NA,NA,NA,Y,NA
+COPEPODA,Cyclopoid,0.4,6.123752633,assigned,LRL for All Cyclopoids,NA,10.968,NA,1.634,NA,NA,NA,Y,NA
+CLADOCERA,Daphnia,0.6,#VALUE!,assigned,LRL for D. catawba,NA,9.631,NA,1.719,NA,NA,NA,Y,NA
+CLADOCERA,Daphnia catawba,0.87,1.993482869,LR,LRL for D. catawba,NA,9.631,NA,1.719,NA,NA,NA,Y,NA
+CLADOCERA,Daphnia dubia,0.78,5.002818511,LR,"Culver et. al. for D. galeata mendotae, std length",NA,10.9317,NA,1.5302,NA,NA,NA,Y,NA
+CLADOCERA,Daphnia galeata mendotae ,0.94,8.833647501,SP,"Culver et. al. for D. galeata mendotae, std length",NA,10.9317,NA,1.5302,NA,NA,NA,Y,NA
+CLADOCERA,Daphnia longiremis,0.67,7.474305859,TR,"Culver et. al. for D. galeata mendotae, std length",NA,10.9317,NA,1.5302,NA,NA,NA,Y,NA
+CLADOCERA,daphnia mendotae,NA,'=10.9317*(J1442^1.5302),NA,LRL for D. galeata mendotae,NA,10.9317,NA,1.5302,NA,NA,NA,Y,NA
+CLADOCERA,Daphnia parvula,0.69,9.944156404,LR,"Culver et. al. for D. galeata mendotae, std length",NA,10.9317,NA,1.5302,NA,NA,NA,Y,NA
+CLADOCERA,Daphnia pulex ,0.87,4.838313094,LR for D. catawba,LRL for D. catawba,NA,9.631,NA,1.719,NA,NA,NA,Y,NA
+CLADOCERA,daphnia pulicaria,NA,'=6.99363*(J1776^2.72),NA,O'Brien & deNoyelles 1974. Hydrobiologia,NA,6.99363,NA,2.72,NA,NA,NA,Y,NA
+CLADOCERA,Daphnia retrocurva ,0.87,#VALUE!,SP,"Culver et. al. for D. retrocurva, standard length",NA,7.5484,NA,2.7552,NA,NA,NA,Y,NA
+CLADOCERA,Daphnia rosea ,0.87,5.089240444,LR for D. catawba,LRL for D. catawba,NA,9.631,NA,1.719,NA,NA,NA,Y,NA
+CLADOCERA,Daphnia schodleri,0.87,7.580624384,LR for D. catawba,LRL for D. catawba,NA,9.631,NA,1.719,NA,NA,NA,Y,NA
+COPEPODA,Diacyclops,0.63,#VALUE!,LR for D.b.t.,LRL for Diacyclops thomasi,NA,14.571,NA,2.557,NA,NA,NA,Y,NA
+COPEPODA,Diacyclops thomasi,0.63,1.399447968,LR,LRL for Diacyclops thomasi,NA,14.571,NA,2.557,NA,NA,NA,Y,NA
+CLADOCERA,Diaphanosoma,0.6,#VALUE!,LR for D.b.,Culver for D. leuchtenbergianum,NA,5.0713,NA,1.0456,NA,NA,NA,Y,NA
+CLADOCERA,Diaphanosoma birgei,0.6,4.384101832,LR,Culver for D. leuchtenbergianum,NA,5.0713,NA,1.0456,NA,NA,NA,Y,NA
+COPEPODA,diaptomid,NA,'=2.857651*(J2556^2.46),NA,Persson & Ekbohm 1980. Arch. Hydrobiol.,NA,2.857651,NA,2.46,NA,NA,NA,Y,NA
+COPEPODA,Epischura lacustris,0.78,0.634949457,LR,Lawrence et. al.,NA,4.336206988,NA,2.4741,NA,Y,NA,NA,NA
+COPEPODA,Ergasilus,NA,,,,NA,NA,NA,NA,NA,NA,NA,NA,NA
+ROTIFERA,Euchlanis ,0.12,0.01728,LR,,NA,0.1,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Euchlanis pellucida,0.3,0.01,Stemberger,,NA,0.1,NA,3,100,NA,Y,NA,NA
+COPEPODA,Eucyclops agilis,0.5,2.45410685,assigned - Balcer,LRL for All Cyclopoids,NA,10.968,NA,1.634,NA,NA,NA,Y,NA
+COPEPODA,Eucyclops speratus,0.6,0.214466617,assigned - Balcer,LRL for All Cyclopoids,NA,10.968,NA,1.634,NA,NA,NA,Y,NA
+ROTIFERA,Filinia ,0.11,0.022464,TR,,NA,0.13,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Filinia terminalis,0.13,0.053248,Stemberger,,NA,0.13,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Gastropus hyptopus,0.09,0.02662,LR,,NA,0.2,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Gastropus spp.,0.09,0.02662,mean of LR spp.,,NA,0.2,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Gastropus stylifer,0.08,0.026,LR,,NA,0.26,NA,3,100,NA,Y,NA,NA
+COPEPODA,harpacticoid,NA,'=2.857651*(J2556^2.46),NA,Persson & Ekbohm 1980. Arch. Hydrobiol.,NA,2.857651,NA,2.46,NA,NA,NA,Y,NA
+CLADOCERA,Holopedium,0.65,7.693960524,LR for H.g.,Yan and Mackie using 'contracted length',NA,12.1825,NA,3.3,NA,NA,NA,Y,NA
+CLADOCERA,Holopedium gibberum,0.65,7.693960524,LR,Yan and Mackie using 'contracted length',NA,12.1825,NA,3.3,NA,NA,NA,Y,NA
+CLADOCERA,Ilyocryptus spinifer,NA,,,,NA,NA,NA,NA,NA,NA,NA,NA,NA
+ROTIFERA,Kellicottia,0.12,0.005184,mean of LR spp.,,NA,0.03,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Kellicottia bostoniensis,0.11,0.003993,LR,,NA,0.03,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Kellicottia longispina,0.13,0.003,LR,,NA,0.03,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Keratella cochlearis,0.09,0.00675,LR,,NA,0.02,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Keratella cochlearis v. tecta,0.11,0.00675,assigned,,NA,0.02,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Keratella crassa,0.12,0.002,LR,,NA,0.02,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Keratella earlinae,0.1,0.002662,TR,,NA,0.02,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Keratella hiemalis,0.12,0.022,LR,,NA,0.22,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Keratella quadrata,0.16,10.043726,TR,,NA,0.22,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Keratella serrulata ,0.11,0.913066,assigned,,NA,0.02,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Keratella serrulata f. curvicornis,0.11,0.194672,assigned,,NA,0.02,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Keratella spp.,0.1,0.00025,assigned,,NA,0.02,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Keratella taurocephala,0.12,1.458,LR,,NA,0.02,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Keratella testudo,0.11,#VALUE!,assigned,,NA,0.22,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Lecane clara ,0.1,2.592,Stemberger,,NA,0.12,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Lecane inermis  ,0.05,3.2955,TR,,NA,0.12,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Lecane leontina,0.15,0.096,Stemberger,,NA,0.12,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Lecane mira,0.15,0.096,Stemberger,,NA,0.12,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Lecane spp.,0.1,7.3695,assigned,,NA,0.12,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Lecane tudicola,0.11,2.859936,Stemberger,,NA,0.12,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Lepadella,0.1,2.38328,LR,used Euclanis formula,NA,0.1,NA,3,100,NA,Y,NA,NA
+COPEPODA,Leptodiaptomus,0.77,0.503163688,LR for L.m.,LRL for L. minutus,NA,10.308,NA,1.761,NA,NA,NA,Y,NA
+COPEPODA,Leptodiaptomus minutus,0.77,0.503163688,LR,LRL for L. minutus,NA,10.308,NA,1.761,NA,NA,NA,Y,NA
+COPEPODA,Leptodiaptomus sicilis,0.9,2.625977203,assigned - Balcer,LRL for L. minutus,NA,10.308,NA,1.761,NA,NA,NA,Y,NA
+CLADOCERA,Leptodora kindti,NA,8.5,,Hawkins and Evans,NA,NA,NA,NA,NA,NA,NA,NA,NA
+CLADOCERA,Lumped Bosmina,0.46,#VALUE!,Balcer,Culver et. al. for Bosmina longirostris,NA,17.7369,NA,2.2291,NA,NA,NA,Y,NA
+CLADOCERA,Lumped Ceriodaphnia,0.85,2.461191664,Balcer,Culver et. al. for C. lacustris,NA,4.0216,NA,1.9763,NA,NA,NA,Y,NA
+CLADOCERA,Lumped Diaphanosoma,0.6,#VALUE!,LR,Culver for D. leuchtenbergianum,NA,5.0713,NA,1.0456,NA,NA,NA,Y,NA
+CLADOCERA,Lumped Holopedium,0.65,0.011143831,LR,Yan and Mackie using 'contracted length',NA,12.1825,NA,3.3,NA,NA,NA,Y,NA
+ROTIFERA,Manfredium ,0.2,0.01331,Stemberger,"used Euclanis formula (""related genus"" - Stemberger)",NA,0.1,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Manfredium eudactylotum ,0.2,0.01,Stemberger,,NA,0.1,NA,3,100,NA,Y,NA,NA
+COPEPODA,Mesocyclops,0.62,0.537492308,LR,LRL for M. edax,NA,11.728,NA,1.634,NA,NA,NA,Y,NA
+COPEPODA,Mesocyclops edax,0.62,0.234351661,LR,LRL for M. edax,NA,11.728,NA,1.625,NA,NA,NA,Y,NA
+ROTIFERA,Monommata spp.,0.11,0.006144,LR,,NA,0.12,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Monostyla lunaris,0.1,0.096,TR,,NA,0.12,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Monostyla obtusa,0.08,0.1875,Stemberger,,NA,0.12,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Monostyla spp.,0.09,0.008748,LR,,NA,0.12,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Mytilinia,0.2,0.028,Stemberger,,NA,0.035,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Notholca acuminata   ,0.25,0.0076895,Stemberger,,NA,0.035,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Notholca michiganensis ,0.2,0.006048,Stemberger,,NA,0.035,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Notholca spp.,0.15,0.0118125,assigned,,NA,0.035,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Notholca squamula,0.13,0.756,Stemberger,,NA,0.035,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Notommata spp.,0.12,1.875,LR,,NA,0.15,NA,3,100,NA,Y,NA,NA
+COPEPODA,Orthocyclops modestus,0.6,0.254757772,assigned,LRL for All Cyclopoids,NA,10.968,NA,1.634,NA,NA,NA,Y,NA
+COPEPODA,Paracyclops fimbriatus poppei,0.5,3.083711488,assigned - Balcer,LRL for All Cyclopoids,NA,10.968,NA,1.634,NA,NA,NA,Y,NA
+ROTIFERA,Ploesoma lenticulare,0.22,0.030613,Stemberger,,NA,0.23,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Ploesoma spp.,0.11,0.244904,TR,,NA,0.23,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Polyarthra ,0.1,0.028,assigned,,NA,0.28,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Polyarthra dolichoptera,0.09,0.020412,LR,,NA,0.28,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Polyarthra euryptera  ,0.18,0.163296,Stemberger,,NA,0.28,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Polyarthra major,0.13,0.061516,LR,,NA,0.28,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Polyarthra remata,0.08,0.014336,LR,,NA,0.28,NA,3,100,NA,Y,NA,NA
+ROTIFERA,Polyarthra vulgaris,0.1,0.028,LR,,NA,0.28,NA,3,100,NA,Y,NA,NA
+CLADOCERA,Polyphemus,NA,0.181213352,,Rosen 1981,NA,2.7792,NA,2.152,NA,Y,NA,NA,NA
+CLADOCERA,Polyphemus pediculus,NA,0.181213352,,Rosen 1981,NA,2.7792,NA,2.152,NA,Y,NA,NA,NA
+ROTIFERA,Pompholyx ,0.11,#VALUE!,Stemberger,,NA,0.15,NA,3,100,NA,Y,NA,NA
+CLADOCERA,sinobosmina fryei,NA,'=17.7369*(J3224^2.2291),NA,Culver et al. for Bosmina longirostris,NA,17.7369,NA,2.2291,NA,NA,NA,Y,NA
+COPEPODA,Skistodiaptomus,0.72,0.150206714,SP for S.o.,Culver et. al. for D. oregonensis CV-VI female,NA,6.1927,NA,1.9604,NA,NA,NA,Y,NA
+COPEPODA,Skistodiaptomus oregonensis,0.72,4.503113604,SP,Culver et. al. for D. oregonensis CV-VI female,NA,6.1927,NA,1.9604,NA,NA,NA,Y,NA
+COPEPODA,Skistodiaptomus pallidus,0.72,4.503113604,SP for S.o.,Culver et. al. for D. oregonensis CV-VI female,NA,6.1927,NA,1.9604,NA,NA,NA,Y,NA
+ROTIFERA,Synchaeta - contracted,0.18,0.01331,LR,,NA,0.1,NA,3,NA,NA,Y,NA,NA
+ROTIFERA,Synchaeta spp.,0.18,#VALUE!,LR,,NA,0.1,NA,3,NA,NA,Y,NA,NA
+ROTIFERA,Trichocerca  porcellus,0.15,1.213056,Stemberger,,NA,0.52,0.25,2,100,NA,NA,NA,Y
+ROTIFERA,Trichocerca birostris,0.09,2.113628774,LR,,NA,0.52,0.33,2,100,NA,NA,NA,Y
+ROTIFERA,Trichocerca cylindrica,0.28,1.213056,LR,,NA,0.52,0.25,2,100,NA,NA,NA,Y
+ROTIFERA,Trichocerca longiseta,0.2,0.018954,Stemberger,,NA,0.52,0.25,2,100,NA,NA,NA,Y
+ROTIFERA,Trichocerca multicrinis,0.19,0.018954,LR,,NA,0.52,0.25,2,100,NA,NA,NA,Y
+ROTIFERA,Trichocerca rousseleti,0.09,0.01096875,LR for T. birostris,,NA,0.52,0.25,2,100,NA,NA,NA,Y
+ROTIFERA,Trichocerca similas  ,0.09,0.00236925,LR for T. birostris,,NA,0.52,0.25,2,100,NA,NA,NA,Y
+ROTIFERA,Trichocerca sp. 2,0.28,0.071344,LR for T. cylindrica,,NA,0.52,0.25,2,100,NA,NA,NA,Y
+ROTIFERA,Trichocerca spp.,0.15,#VALUE!,assigned,,NA,0.52,0.25,2,100,NA,NA,NA,Y
+ROTIFERA,Trochosphaera solstitialis ,NA,,,,NA,NA,NA,NA,NA,NA,NA,NA,NA
+COPEPODA,tropocyclops,NA,'=10.968*(J3316^1.634),NA,LRL for all Cyclopoids,NA,10.968,NA,1.634,NA,NA,NA,Y,NA
+COPEPODA,Tropocyclops prasinus mexicanus,0.39,3.083711488,LR,LRL for All Cyclopoids,NA,10.968,NA,1.634,NA,NA,NA,Y,NA
+CLADOCERA,Unknown Cladoceran,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
