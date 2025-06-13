@@ -1,66 +1,42 @@
-library(tidyverse)
+
 library(nlme)
 
-ag.data<- read_csv("data/summary_medians.csv")|> 
-  mutate(group = if_else(year4 < 2008, 'pre', 'post'))
+# Test autocorrelation of timseries
+acf(summary_medians$median_secchi) #yes
+acf(summary_medians$median_totnuf) #yes
+acf(summary_medians$median_totpuf) #yes
+acf(summary_medians$median_chla, na.action = na.pass) #no
+acf(summary_medians$fil_algae_sum, na.action = na.pass) #no
+acf(summary_medians$dWL, na.action = na.pass) #yes
 
-#Secchi 
-acf(ag.data$median_secchi)
-#YES
+# To assess differences in water clarity pre vs. post removal, we
+# used a generalized least squares (GLS) model with an autoregressive
+# correlation structure. Here, we modeled median Secchi depth
+# (median_secchi) as a function of (group) using the gls()
+# function from the nlme package in R. To account for potential temporal
+# autocorrelation in repeated annual measurements, we included a first-order
+# autoregressive correlation structure (corAR1) with respect to year (year4).
+# This structure models residuals from consecutive years as being correlated,
+# thereby improving model estimates when temporal dependence is present.
 
-#TN
-tn_gls<- ag.data%>%
-  select(median_totnuf, group, year4)%>%
-  na.omit()
-acf(tn_gls$median_totnuf)
-#YES
-
-#TP
-tp_gls<- ag.data%>%
-  select(median_totpuf, group, year4)%>%
-  na.omit()
-acf(tp_gls$median_totpuf)
-#YES
-
-#Chlorophyll
-chl_gls<- ag.data%>%
- select(median_chla, group)%>%
-  na.omit()
-acf(chl_gls$median_chla)
-#NO
-
-#filamentous algae
-fil_gls<- ag.data%>%
-  select(fil_algae_sum, group, year4)%>%
-  na.omit()
-acf(fil_gls$fil_algae_sum)
-#NO
-
-#zooplankton
-zoop_gls<-ag.data %>%
-  select(zoop_summer_mgm3, group, year4)%>%
-  na.omit()
-acf(zoop_gls$zoop_summer_mgm3)
-#NO
-
-gls_secchi <- gls(median_secchi ~ group, data = ag.data, correlation = corAR1(form = ~ year4))
+gls_secchi <- gls(median_secchi ~ removal, data = summary_medians, correlation = corAR1(form = ~ year4))
 summary(gls_secchi)
 residuals_gls <- resid(gls_secchi) # extract model residuals 
 acf(residuals_gls, main = "ACF of GLS Residuals")  # If the AR(1) structure has effectively accounted for autocorrelation, 
 # the ACF plot should show little to no significant autocorrelation
 
-gls_tn <-  gls(median_totnuf ~ group, data = tn_gls, correlation = corAR1(form = ~ year4))
+gls_tn <-  gls(median_totnuf ~ removal, data = summary_medians |> filter(!is.na(median_totnuf)), correlation = corAR1(form = ~ year4))
 summary(gls_tn)
 
-gls_tp <-  gls(median_totpuf ~ group, data = tp_gls, correlation = corAR1(form = ~ year4))
+gls_tp <-  gls(median_totpuf ~ removal, data = summary_medians |> filter(!is.na(median_totpuf)), correlation = corAR1(form = ~ year4))
 summary(gls_tp)
 
-gls_chloro <- gls(median_chla ~ group, data = chl_gls)
+gls_chloro <- gls(median_chla ~ removal, data = summary_medians |> filter(!is.na(median_chla)))
 summary(gls_chloro)
 
-gls_zoop <- gls(sum_fil_algae ~ group, data = fil_gls)
-summary(gls_zoop)
-
-gls_fil <- gls(fil_algae_sum ~ group, data = fil_gls)
+gls_fil <- gls(fil_algae_sum ~ removal, data = summary_medians |> filter(!is.na(fil_algae_sum)))
 summary(gls_fil)
+
+gls_dWL <- gls(dWL ~ removal, data = summary_medians |> filter(!is.na(dWL)), correlation = corAR1(form = ~ year4))
+summary(gls_secchi)
 

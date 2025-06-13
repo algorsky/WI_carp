@@ -1,12 +1,8 @@
-library(tidyverse)
+
 library(broom)
 
-# Load and preprocess
-summary_medians <- read_csv("data/summary_medians.csv") %>%
-  mutate(group = if_else(year4 < 2008, "pre", "post"))
-
 # Response variables
-response_vars <- c("median_secchi", "median_totnuf", "median_totpuf", "median_chla")
+response_vars <- c("median_secchi", "median_totnuf", "median_totpuf", "median_chla", "dWL")
 
 # Model and extract summary stats
 model_summary_table <- summary_medians %>%

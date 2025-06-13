@@ -1,12 +1,5 @@
-library(dplyr)
-library(trend)
-library(tibble)
 
-chloro_breakpoint<- chloro_all|> filter(year4 > 2004)
-
-library(dplyr)
 library(trend)
-library(tibble)
 
 # Function to run Pettitt's test and return p-value and include U* statistic
 run_pettitt_with_U <- function(df, var_name, date_col = "sampledate") {
@@ -31,10 +24,11 @@ run_pettitt_with_U <- function(df, var_name, date_col = "sampledate") {
 
 # Run Pettitt's test on all four variables
 pettitt_full_summary <- bind_rows(
-  run_pettitt_with_U(secchi_all, "secnview"),
+  run_pettitt_with_U(secchi, "secnview"),
   run_pettitt_with_U(tn, "totnuf"),
   run_pettitt_with_U(tp, "totpuf"),
-  run_pettitt_with_U(chloro_breakpoint, "chl_use"),
+  run_pettitt_with_U(chloro_all, "chl_use"),
+  run_pettitt_with_U(limnosat, "dWL")
 )
 
 # Filter to only significant results

@@ -1,5 +1,6 @@
 library(tidyverse)
 
+# Download file from EDI
 inUrl1  <- "https://pasta.lternet.edu/package/data/eml/knb-lter-ntl/38/30/66796c3bc77617e7cc95c4b09d4995c5" 
 infile1 <- tempfile()
 try(download.file(inUrl1,infile1,method="curl",extra=paste0(' -A "',getOption("HTTPUserAgent"),'"')))
@@ -26,6 +27,7 @@ chloro_all <- chloro_lter %>%
     ),
     .groups = "drop"
   ) %>%
-  select(lakeid, year4, sampledate, chl_use, method_used)
+  filter(method_used == 'correct_fluor') |> 
+  select(lakeid, year4, sampledate, chl_use, method_used) |> 
+  mutate(removal = ifelse(year(sampledate) < 2008, "<2008", ">=2008"))
 
-#write_csv(chloro_all, "data/chloro_WI.csv")
