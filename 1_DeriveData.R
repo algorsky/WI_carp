@@ -88,8 +88,7 @@ colonization <- macrophyte_dnr %>%
   mutate(colonization_m = colonization_ft*0.3048)
 
 #################### Zooplankton ####################
-zoop_biomass<- read_csv("data/zoops.biomass.TB.csv")|>
-  mutate(mg_m3 = ug_m3/1000)
+source('0_zooplankton.R') 
 
 #################### Filamentous algae ####################
 source('0_filalgae.R')
