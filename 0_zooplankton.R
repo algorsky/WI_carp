@@ -39,10 +39,10 @@ unique(zoops$species_name)[!unique(zoops$species_name) %in% unique(conversion$sp
 zoops_join = zoops |> left_join(conversion, by = join_by('species_name' == 'species')) |> 
   mutate(biomass_ugL = mass_ug * density) |> 
   mutate(group = case_when(
-    species_name %in% c("acanthocyclops", "mesocyclops edax", "tropocyclops prasinus mexicanus", "chydorus", "tropocyclops") ~ "Cyclopoid",
-    species_name %in% c("diaptomus spp", "aglaodiaptomus clavipes", "diacyclops thomasi", "diaptomid", "calanoid") ~ "Calanoid",
+    species_name %in% c("acanthocyclops", "mesocyclops edax", "tropocyclops prasinus mexicanus", "tropocyclops", "diacyclops thomasi") ~ "Copepoda",
+    species_name %in% c("diaptomus spp", "aglaodiaptomus clavipes", "diaptomid", "calanoid") ~ "Copepoda",
     species_name %in% c("daphnia pulicaria", "daphnia retrocurva", "daphnia mendotae", "daphnia parvula", "diaphanosoma birgei", "daphnia") ~ "Daphnia",
-    species_name %in% c("bosmina") ~ "Bosmina",
+    species_name %in% c("bosmina", "chydorus") ~ "Branchiopoda",
     species_name %in% c("sinobosmina fryei", "copepod nauplii", "copepodites") ~ "Small Cladocera",
     TRUE ~ "Other"
   ))
@@ -57,12 +57,15 @@ zoops_join |> filter(month(sample_date) %in% c(6,7,8)) |>
   geom_point(aes(x = sample_date, y = density)) +
   facet_wrap(~species_name, scales = 'free_y')
 
-
 zoops_year = zoops_join |> filter(month(sample_date) %in% c(6,7,8)) |> 
   group_by(sample_date, group) |> 
-  summarise(biomass_ugL = sum(biomass_ugL, na.rm = T)) |> 
+  summarise(biomass_ugL = sum(biomass_ugL, na.rm = T), density = sum(density, na.rm = T)) |> 
   group_by(year = year(sample_date), group) |> 
-  summarise(mean_biomass_ugL = mean(biomass_ugL, na.rm = T))
+  summarise(mean_biomass_ugL = mean(biomass_ugL, na.rm = T), density = mean(density, na.rm = T))
+
+ggplot(zoops_year) +
+  geom_point(aes(x = density, mean_biomass_ugL)) +
+  facet_wrap(~group)
 
 ggplot(zoops_year, aes(x = year, y = mean_biomass_ugL/1e6, fill = group)) +
   geom_col() +
@@ -81,19 +84,19 @@ ggplot(zoops_year, aes(x = year, y = mean_biomass_ugL/1e6, fill = group)) +
 #               "Small Cladocera")))+
 #   theme_bw(base_size = 14)+
 #   theme(legend.title= element_blank())
-
-#zooplankton
-summer_zoop_sampling<- zoop_biomass|>
-  select(sample_date, mg_m3)%>%
-  mutate(month = month(sample_date))%>%
-  filter(month > 5 & month < 9)%>%
-  mutate(year = year(sample_date))
-zoop_summer_mean<- summer_zoop_sampling%>%
-  filter(!is.na(mg_m3))%>%
-  group_by(sample_date)%>%
-  summarize(sum = sum(mg_m3))
-zoop_summer_sum<- zoop_summer_mean%>%
-  mutate(year = year(sample_date))%>%
-  group_by(year)%>%
-  summarize(zoop_summer_mgm3 = mean(sum))%>%
-  rename(year4 = year)
+# 
+# #zooplankton
+# summer_zoop_sampling<- zoop_biomass|>
+#   select(sample_date, mg_m3)%>%
+#   mutate(month = month(sample_date))%>%
+#   filter(month > 5 & month < 9)%>%
+#   mutate(year = year(sample_date))
+# zoop_summer_mean<- summer_zoop_sampling%>%
+#   filter(!is.na(mg_m3))%>%
+#   group_by(sample_date)%>%
+#   summarize(sum = sum(mg_m3))
+# zoop_summer_sum<- zoop_summer_mean%>%
+#   mutate(year = year(sample_date))%>%
+#   group_by(year)%>%
+#   summarize(zoop_summer_mgm3 = mean(sum))%>%
+#   rename(year4 = year)

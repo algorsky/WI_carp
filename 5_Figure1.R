@@ -20,32 +20,32 @@ theme_timeseries <- function() {
 
 secchi_timeseries = ggplot() +
   geom_point(data = secchi, aes(x = sampledate, y = secnview, fill = removal), size = 1.1, shape = 21, alpha = 0.5) +
-  geom_line(data = summary_medians, aes(x = as.Date(paste0(year4, "-07-01")), y = median_secchi), linewidth = 1) +
+  geom_line(data = summary_means, aes(x = as.Date(paste0(year4, "-07-01")), y = mean_secchi), linewidth = 1) +
   ylab(expression(paste("Secchi (m)"))) +
   theme_timeseries()
 
 tn_timeseries <- ggplot() +
   geom_point(data = tn,aes(x = sampledate, y = totnuf, fill = removal), size = 1.1, shape = 21, alpha = 0.5) +
-  geom_line(data = summary_medians, aes(x = as.Date(paste0(year4, "-07-01")), y = median_totnuf), linewidth = 1) +
+  geom_line(data = summary_means, aes(x = as.Date(paste0(year4, "-07-01")), y = mean_totnuf), linewidth = 1) +
   ylab(bquote(atop("Total nitrogen", "(" * mu * "g " * L^{-1} * ")"))) +
   theme_timeseries()
 
 tp_timeseries <- ggplot() +
   geom_point(data = tp,aes(x = sampledate, y = totpuf, fill = removal), size = 1.1, shape = 21, alpha = 0.5) +
-  geom_line(data = summary_medians, aes(x = as.Date(paste0(year4, "-07-01")), y = median_totpuf), linewidth = 1) +
+  geom_line(data = summary_means, aes(x = as.Date(paste0(year4, "-07-01")), y = mean_totpuf), linewidth = 1) +
   ylab(bquote(atop("Total phosphorus", "(" * mu * "g " * L^{-1} * ")"))) +
   theme_timeseries()
 
 chloro_timeseries <- ggplot() +
   geom_point(data = chloro_all, aes(x = sampledate, y = chl_use, fill = removal),size = 1.1, shape = 21, alpha = 0.5) +
-  geom_line(data = summary_medians, aes(x = as.Date(paste0(year4, "-07-01")), y = median_chla), linewidth = 1) +
+  geom_line(data = summary_means, aes(x = as.Date(paste0(year4, "-07-01")), y = mean_chla), linewidth = 1) +
   ylab(bquote(atop("Chlorophyll a", "(" * mu * "g " * L^{-1} * ")"))) +
   theme_timeseries()
 
-dWL_timeseries <- ggplot() +
-  geom_point(data = limnosat, aes(x = sampledate, y = dWL, fill = removal), size = 1.1, shape = 21, alpha = 0.5) +
-  geom_line(data = summary_medians, aes(x = as.Date(paste0(year4, "-07-01")), y = dWL), linewidth = 1) +
-  ylab('dWL (nm)') +
+ls7_timeseries <- ggplot() +
+  geom_point(data = ls7, aes(x = sampledate, y = redblue, fill = removal), size = 1.1, shape = 21, alpha = 0.5) +
+  geom_line(data = summary_means, aes(x = as.Date(paste0(year4, "-07-01")), y = redblue), linewidth = 1) +
+  ylab('RBindex') +
   theme_timeseries()
 
 macro_timeseries <- ggplot(macrophyte_timeseries) +
@@ -54,7 +54,7 @@ macro_timeseries <- ggplot(macrophyte_timeseries) +
   ylab("Max colonization \ndepth (m)") +
   scale_fill_manual(values = c( "white", "black")) +
   xlab("") +
-  xlim(c(1995, 2023)) +
+  xlim(c(1995, 2025)) +
   theme_bw(base_size = 9) + 
   theme(legend.position = "none")
 
@@ -82,40 +82,40 @@ theme_boxplot <- function() {
       axis.line = element_line(colour = "black")))
 }
 
-secchi_boxplot <- ggplot(summary_medians, aes(x = removal, y = median_secchi)) +
+secchi_boxplot <- ggplot(summary_means, aes(x = removal, y = mean_secchi)) +
   geom_boxplot(outlier.color = NA) +
   geom_jitter(aes(fill = removal), shape = 21, alpha = 0.5) +
-  annotate("text", x=1, y=2, label= "p < 0.01", size = 2) +
+  annotate("text", x=1, y=Inf, vjust = 2, label= "p < 0.01", size = 2) +
   theme_boxplot()
 
-tn_boxplot <- ggplot(summary_medians, aes(x = removal, y = median_totnuf)) +
+tn_boxplot <- ggplot(summary_means, aes(x = removal, y = mean_totnuf)) +
   geom_boxplot(outlier.color = NA) +
   geom_jitter(aes(fill = removal), shape = 21, alpha = 0.5) +
-  annotate("text", x=2, y=1600, label= "p < 0.01", size = 2) +
+  annotate("text", x=2, y=Inf, vjust = 2, label= "p < 0.01", size = 2) +
   theme_boxplot()
 
-tp_boxplot <- ggplot(summary_medians, aes(x = removal, y = median_totpuf)) +
+tp_boxplot <- ggplot(summary_means, aes(x = removal, y = mean_totpuf)) +
   geom_boxplot(outlier.color = NA) +
   geom_jitter(aes(fill = removal), shape = 21, alpha = 0.5) +
-  annotate("text", x=2, y=75, label= "p < 0.01", size = 2) +
+  annotate("text", x=2, y=Inf, vjust = 1, label= "p < 0.01", size = 2) +
   theme_boxplot()
 
-chloro_boxplot <- ggplot(summary_medians, aes(x = removal, y = median_chla)) +
+chloro_boxplot <- ggplot(summary_means, aes(x = removal, y = mean_chla)) +
   geom_boxplot(outlier.color = NA) +
   geom_jitter(aes(fill = removal), shape = 21, alpha = 0.5) +
-  annotate("text", x=1, y=35, label= "p = NS", size = 2) +
+  annotate("text", x=2, y=Inf, vjust = 1, label= "p = NS", size = 2) +
   theme_boxplot()
 
-dWL_boxplot <- ggplot(summary_medians, aes(x = removal, y = dWL)) +
+ls7_boxplot <- ggplot(summary_means, aes(x = removal, y = redblue)) +
   geom_boxplot(outlier.color = NA) +
   geom_jitter(aes(fill = removal), shape = 21, alpha = 0.5) +
-  annotate("text", x=1, y=600, label= "p < 0.01", size = 2) +
+  annotate("text", x=2, y=Inf, vjust = 2, label= "p < 0.01", size = 2) +
   theme_boxplot()
 
 fil_box<- ggplot(fil_algae_timeseries, aes(x = removal, y = fil_algae_sum)) +
   geom_boxplot(outlier.color = NA) +
   geom_jitter(aes(fill = removal), shape = 21, alpha = 0.5) +
-  annotate("text", x=1, y=15000, label= "p < 0.01", size = 2) +
+  annotate("text", x=1, y=Inf, vjust = 2, label= "p < 0.01", size = 2) +
   theme_boxplot()
 
 
@@ -187,20 +187,21 @@ design <- c(
   area(3, 2),  # tp_boxplot
   area(4, 2),  # chloro_boxplot
   area(5, 2),  # dWL_boxplot
-  area(6, 2),  # blank_plot
+  # area(6, 2),  # blank_plot
   area(7, 2)   # fil_box
 )
 
 # Combine using design layout
 wrap_plots(
   secchi_timeseries, tn_timeseries, tp_timeseries, chloro_timeseries,
-  dWL_timeseries, macro_timeseries, fil_timeseries,
+  ls7_timeseries, macro_timeseries, fil_timeseries,
   secchi_boxplot, tn_boxplot, tp_boxplot, chloro_boxplot,
-  dWL_boxplot, blank_plot, fil_box,
+  ls7_boxplot, #blank_plot, 
+  fil_box,
   design = design) +
   plot_layout(widths = c(2, 1)) +
   plot_annotation(tag_levels = 'a', tag_prefix = "(", tag_suffix = ")") &
   theme(plot.tag = element_text(size = 8))
 
-ggsave("figures/Figure1.png", width = 6.5, height = 8, units = 'in')
+ggsave("figures/Figure1.png", width = 6.5, height = 8, units = 'in', dpi = 500)
 

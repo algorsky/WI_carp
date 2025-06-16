@@ -31,3 +31,6 @@ chloro_all <- chloro_lter %>%
   select(lakeid, year4, sampledate, chl_use, method_used) |> 
   mutate(removal = ifelse(year(sampledate) < 2008, "<2008", ">=2008"))
 
+# ggplot(chloro_lter) +
+#   geom_point(aes(x = sampledate, y = correct_chl_fluor)) +
+#   geom_point(aes(x = sampledate, y = uncorrect_chl_fluor), col = 'red')
