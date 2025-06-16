@@ -151,3 +151,31 @@ summary_means <- secchi_mean %>%
   left_join(ls7_mean, by = 'year4') |> 
   mutate(across(-year4, ~ ifelse(year4 == 2020, NA, .))) |> # Remove 2020 (lack of data)
   mutate(removal = ifelse(year4 < 2008, "<2008", ">=2008"))
+
+# For Table S1 
+# Identify the years in the dataset
+all_years <- sort(unique(summary_means$year4))
+# Select numeric columns (or all columns you want to check)
+cols_to_check <- summary_means %>% select(-year4) %>% names()
+
+# Function to get start, end, and missing years
+year_summary <- function(col_name) {
+  df <- summary_means %>%
+    select(year4, all_of(col_name)) %>%
+    filter(!is.na(.data[[col_name]]))
+  
+  present_years <- sort(unique(df$year4))
+  missing_years <- setdiff(all_years, present_years)
+  
+  tibble(
+    column = col_name,
+    start_year = min(present_years, na.rm = TRUE),
+    end_year = max(present_years, na.rm = TRUE),
+    missing_years = paste(missing_years, collapse = ", ")
+  )
+}
+
+# Apply function to each column
+year_summaries <- map_dfr(cols_to_check, year_summary)
+
+print(year_summaries)
