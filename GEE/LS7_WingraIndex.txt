@@ -1,0 +1,202 @@
+//First import wingra shapefile
+
+// This script adds an image selection dropdown to the map and automatically draws the true color (TC)
+// image, the classified image (for sediment) version 2024-01-08 and the atmospheric opacity (turned off 
+// by default) for manual image examination to check for cirrus clouds. 
+
+// Click 'run' for the dropdown of dates to appear.
+
+Map.addLayer(wingraShp);
+
+//Create Clip Function.
+function clp(img) {
+  return img.clip(wingraShp);
+}
+
+// Define the latitude and longitude coordinates
+var lat = 43.0536;   // Replace with your latitude (e.g., 37.7749 for San Francisco)
+var lon = -89.4195;  // Replace with your longitude (e.g., -122.4194 for San Francisco)
+// Create a point geometry representing the location
+var point = ee.Geometry.Point(lon, lat);
+// Apply the buffer method to the BBox object.
+var pointBuffer = point.buffer({'distance': 3000});
+// --------------------------//
+// load image collections ---//
+// --------------------------//
+
+// define bands
+var bn457 = ['QA_PIXEL', 'SR_B1', 'SR_B2', 'SR_B3', 'SR_B4', 'SR_B5', 'SR_B7', 'QA_RADSAT', 'SR_ATMOS_OPACITY'];
+var bn = ['pixel_qa', 'blue', 'green', 'red', 'nir', 'B5','B7', 'QA_RADSAT','SR_ATMOS_OPACITY'];
+
+// filter stack for desired PRs
+// var ROWS = ee.List([30, 30]);
+
+var cloudMaskL457 = function(image) {
+  var qa = image.select('pixel_qa');
+  // If the cloud bit (5) is set and the cloud confidence (7) is high
+  // or the cloud shadow bit is set (3), then it's a bad pixel.
+  var cloud = qa.bitwiseAnd(1 << 5)
+                  .and(qa.bitwiseAnd(1 << 7))
+                  .or(qa.bitwiseAnd(1 << 3));
+  // Remove edge pixels that don't occur in all bands
+  var mask2 = image.mask().reduce(ee.Reducer.min());
+  return image.updateMask(cloud.not()).updateMask(mask2);
+};
+
+// function to apply scaling factors
+function applyScaleFactors(image) {
+  var opticalBands = image.select("SR_B.").multiply(0.0000275).add(-0.2); //note - this applies the offset to QA RADSAT - the 0 value will now be -0.2!
+  var opac = image.select('SR_ATMOS_OPACITY').multiply(0.0001);
+  return image
+    .addBands(opticalBands, null, true)
+    .addBands(opac, null, true);
+}
+
+// function to mask saturated pixels
+function apply_radsat_mask(image){
+  var radsat = image.select('QA_RADSAT').eq(0); // this is due to the application of the scaling factor
+  return image.updateMask(radsat);
+}
+
+
+// function to add image date
+function addImageDate(image){
+  var mission = image.get('SPACECRAFT_ID');
+  var date = image.date().format('YYYY-MM-dd');
+  var missDate = ee.String(mission).cat('_').cat(ee.String(date));
+  return image.set('missDate', missDate);
+}
+
+
+// ls7 stack, filtered and with all functions applied
+var l7 = ee.ImageCollection('LANDSAT/LE07/C02/T1_L2')
+  .filterBounds(wingraShp)
+  .filter(ee.Filter.gte('IMAGE_QUALITY', 7))
+  .filter(ee.Filter.lte('CLOUD_COVER_LAND', 30))
+  .filter(ee.Filter.calendarRange(6, 9,'month'))
+  .map(applyScaleFactors)
+  .select(bn457, bn)
+  .map(apply_radsat_mask)
+  .map(addImageDate);
+  
+
+// get distinct dates from stack
+var dates = l7.aggregate_array('missDate').distinct();
+
+// Clip Collection
+var clipped_l7 = l7.map(clp)
+  .filter(ee.Filter.lte('CLOUD_COVER_LAND', 20))
+//Map.addLayer(clipped_coll);
+
+// Apply Cloud Mask to collection
+var cmask_coll = clipped_l7.map(cloudMaskL457);
+
+
+//calculate ndvi
+var redblue = function(image){
+    var ndv = image.normalizedDifference(['red','blue']);
+    return ndv.copyProperties(image, ['system:index', 'system:time_start']);
+};
+
+var redblue = cmask_coll.map(redblue);
+
+var chart = ui.Chart.image.seriesByRegion({
+  imageCollection:redblue, 
+  regions:wingraShp,
+  reducer: ee.Reducer.mean(), 
+  scale:30,
+  seriesProperty:'class'
+  
+});
+
+// Set chart style properties.
+var chartStyle = {
+  title: 'Red:Blue ratio over Lake Wingra, Landsat 7',
+  hAxis: {
+    title: 'Year',
+    titleTextStyle: {italic: false, bold: true},
+    gridlines: {color: 'FFFFFF'}
+  },
+  vAxis: {
+    title: 'Normalized Diff Red:Blue',
+    titleTextStyle: {italic: false, bold: true},
+    gridlines: {color: 'FFFFFF'},
+    format: 'short',
+    baselineColor: 'FFFFFF'
+  },
+  series: {
+    0: {lineWidth: 3, color: 'E37D05', pointSize: 7},
+    1: {lineWidth: 7, color: '1D6B99', lineDashStyle: [4, 4]}
+  },
+  chartArea: {backgroundColor: 'EBEBEB'}
+};
+
+// Apply custom style properties to the chart.
+chart.setOptions(chartStyle);
+
+print(chart);
+
+// Export data 
+var timeSeries = redblue.map(function(image) {
+  var date = image.date().format('YYYY-MM-dd');
+  var stats = image.reduceRegions({
+    collection: wingraShp,
+    reducer: ee.Reducer.mean(),
+    scale: 30
+  });
+
+  return stats.map(function(f) {
+    return f.set('date', date);
+  });
+}).flatten();  // Flatten to get a single FeatureCollection
+
+Export.table.toDrive({
+  collection: timeSeries,
+  description: 'redblue_timeseries_export',
+  fileFormat: 'CSV'
+});
+
+// --------------------------//
+// ---- make maps -----------//
+// --------------------------//
+
+// Make visual schemes
+// True Colr
+var TC_vis = {
+    bands: ['red', 'green', 'blue'], // True color visualization using bands 4, 3, and 2 (RGB)
+    min: 0.0,
+    max: 0.2,
+};
+
+var dropdown = ui.Select({
+  items: dates.getInfo(),
+  placeholder: 'select a mission-date',
+  onChange: function(selected) {
+    // clear map and add dropdown on change
+    Map.clear();
+    Map.add(dropdown);
+
+    // get the image date
+    var date_str = selected.slice(10, 21);
+    var date = ee.Date(date_str);
+    var img = l7.filterDate(date, date.advance(1, 'day'));
+    var clipped_coll = img.map(clp);
+    print(clipped_coll, 'clippped_coll');
+    
+    // mosaic to mean value across bands
+    img = img.mean();
+    // add layers and define visualization
+
+    Map.addLayer(img, TC_vis, 'True Color');
+    
+      // Clip Collection
+   
+    Map.addLayer(clipped_coll, TC_vis, 'Clipped Color');
+  }
+});
+
+dropdown.style().set({
+  position: 'top-center'
+});
+
+Map.add(dropdown);
