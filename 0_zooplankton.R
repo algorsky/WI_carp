@@ -2,7 +2,6 @@
 
 # Libraries 
 library(tidyverse)
-library(lubridate)
 
 # Load in datasets #=======================
 # Package ID: knb-lter-ntl.90.36 Cataloging System:https://pasta.edirepository.org.
@@ -49,21 +48,25 @@ zoops_join = dt1 |>
     TRUE ~ "Other"
   ))
 
+# Plot length timeseries
 zoops_join |> filter(month(sample_date) %in% c(6,7,8)) |> 
   ggplot() +
   geom_point(aes(x = sample_date, y = avg_length)) +
   facet_wrap(~species_name, scales = 'free_y')
 
+# Plot density time series
 zoops_join |> filter(month(sample_date) %in% c(6,7,8)) |> 
   ggplot() +
   geom_point(aes(x = sample_date, y = density)) +
   facet_wrap(~species_name, scales = 'free_y')
 
+# Group and summarise by date
 zoops_all = zoops_join |> filter(month(sample_date) %in% c(6,7,8)) |> 
   group_by(sample_date, group) |> 
   summarise(density = sum(density, na.rm = T)) |> 
   rename(sampledate = sample_date)
 
+# Group and summarise by year 
 zoops_year = zoops_all |> 
   group_by(year = year(sampledate), group) |> 
   summarise(density = mean(density, na.rm = T))
@@ -72,9 +75,9 @@ ggplot(zoops_year) +
   geom_point(aes(x = year, density)) +
   facet_wrap(~group)
 
-
-a = zoops_all |> left_join(chloro_all)
-ggplot(a) +
-  geom_point(aes(x = density, y = chl_use)) +
-  facet_wrap(~group, scales = 'free')
+# # Join with chlorophyll? 
+# a = zoops_all |> left_join(chloro_all)
+# ggplot(a) +
+#   geom_point(aes(x = density, y = chl_use)) +
+#   facet_wrap(~group, scales = 'free')
 
