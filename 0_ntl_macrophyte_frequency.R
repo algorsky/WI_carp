@@ -1,25 +1,27 @@
 library(tidyverse)
 
-inUrl1  <- "https://pasta.lternet.edu/package/data/eml/knb-lter-ntl/23/30/aa5720aec0e577431faeee352b91a937" 
+# North Temperate Lakes LTER: Macrophyte Rating - Madison Lakes Area 1995 - current
+# inUrl1  <- "https://pasta.lternet.edu/package/data/eml/knb-lter-ntl/23/30/aa5720aec0e577431faeee352b91a937" 
+inUrl1  <- "https://pasta.lternet.edu/package/data/eml/knb-lter-ntl/23/31/62feecc7e7732c17ebb5284c58bc597d"  # newest revision
 infile1 <- tempfile()
 try(download.file(inUrl1,infile1,method="curl"))
 
-d1<- read_csv(infile1)|>
+d1 <- read_csv(infile1)|>
   filter(lakeid == "WI")
 
-crosswalk<- read_csv("data/crosswork_macrophyte.csv")
+crosswalk <- read_csv("data/crosswork_macrophyte.csv")
 
-df<- d1%>%
-  filter(spname != "UNKNOWN"  & spname != "UNKNOWN 1")%>%
-  filter(spname != "FILAMENTOUS ALGAE")%>%
-  filter(spname != "FILAMENTOUS ALGEA")%>%
-  filter(spname != "LEMNA MINOR")%>%
-  mutate(spname = ifelse(spname == "POTAMOGETON NATANS:", "POTAMOGETON NATANS", spname))%>%
+df <- d1 |> 
+  filter(spname != "UNKNOWN"  & spname != "UNKNOWN 1") %>%
+  filter(spname != "FILAMENTOUS ALGAE") %>%
+  filter(spname != "FILAMENTOUS ALGEA") %>%
+  filter(spname != "LEMNA MINOR") %>%
+  mutate(spname = ifelse(spname == "POTAMOGETON NATANS:", "POTAMOGETON NATANS", spname)) %>%
   mutate(spname = ifelse(spname == "NYMPHAEA ODORATA SSP. TUBEROSA", "NYMPHAEA ODORATA",
-                         ifelse(spname == "NUPHAR VARIEGATA", "NYMPHAEA ODORATA", spname)))%>%
+                         ifelse(spname == "NUPHAR VARIEGATA", "NYMPHAEA ODORATA", spname))) %>%
   dplyr::select(-flag)
 
-df_crosswalk<- df%>%
+df_crosswalk <- df%>%
   left_join(crosswalk, by = "spname")%>%
   mutate(spname = ifelse(spname == "STRUCKENIA PECTINATA", "STUCKENIA PECTINATA", spname))%>%
   mutate(name = ifelse(spname == "STUCKENIA PECTINATA", "Potamogeton pectinatus L.", name))%>%
@@ -50,7 +52,7 @@ species_counts_with_frequencies <- species_counts_with_frequencies %>%
   arrange(year4, desc(Relative_Frequency))%>%
   mutate(Relative_Frequency_perc = Relative_Frequency*100)
 
-table_frequ<- species_counts_with_frequencies %>% 
+table_frequ <- species_counts_with_frequencies %>% 
   dplyr::select(year4, label, Relative_Frequency_perc)%>%
   pivot_wider(names_from = year4, values_from = Relative_Frequency_perc)
 
@@ -58,7 +60,7 @@ table_frequ<- species_counts_with_frequencies %>%
 #inclusive of 2m and below
 
 #Average based off year groupings
-data_category<- species_counts_with_frequencies%>%
+data_category <- species_counts_with_frequencies%>%
   mutate(Year = as.numeric(year4))%>%
   mutate(year = ifelse(Year < 1998, "1995-1997",
                        ifelse(Year > 1997 & Year < 2001, "1998-2000",
@@ -68,12 +70,12 @@ data_category<- species_counts_with_frequencies%>%
                                                    ifelse(Year > 2010 & Year < 2014, "2011-2013",
                                                           ifelse(Year > 2013 & Year < 2017, "2014-2016", "2017-2018"))))))))
 
-data_category_summary<- data_category%>%
-  group_by(year, label)%>%
+data_category_summary <- data_category %>%
+  group_by(year, label) %>%
   summarize(frequency = mean(Relative_Frequency)*100)
 
-table_mean_freq<- data_category_summary %>% 
-  dplyr::select(year, label, frequency)%>%
+table_mean_freq <- data_category_summary %>% 
+  dplyr::select(year, label, frequency) %>%
   pivot_wider(names_from = year, values_from = frequency)
 
 

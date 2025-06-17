@@ -1,17 +1,27 @@
 library(tidyverse)
 
 # Join and fit models per 'removal' group for phosphorus
-sig_models_TP <- tp %>% left_join(tn) |> 
+sig_models_TP <- tp %>%
+  left_join(tn) %>%
   left_join(chloro_all) %>%
   group_by(removal) %>%
   do({
     model <- lm(chl_use ~ totpuf, data = .)
-    tidy_model <- broom::tidy(model)
+    tidy_model <- tidy(model)
+    glance_model <- glance(model)
+    
     slope_p <- tidy_model %>% filter(term == "totpuf") %>% pull(p.value)
     if (length(slope_p) == 0) slope_p <- NA  # edge case handling
-    mutate(., sig_line = slope_p < 0.05, p = slope_p)
+    
+    r2 <- glance_model$r.squared
+    if (length(r2) == 0) r2 <- NA  # edge case handling
+    
+    mutate(., sig_line = slope_p < 0.05, p = slope_p, r2 = r2)
   }) %>%
   ungroup()
+
+unique(sig_models_TP$r2)
+unique(sig_models_TP$p)
 
 tp1 = tp |> left_join(chloro_all) |> 
   ggplot(aes(x = totpuf, y = chl_use)) +
@@ -35,12 +45,22 @@ sig_models_TN <- tp %>% left_join(tn) |>
   group_by(removal) %>%
   do({
     model <- lm(chl_use ~ totnuf, data = .)
-    tidy_model <- broom::tidy(model)
+    tidy_model <- tidy(model)
+    glance_model <- glance(model)
+    
     slope_p <- tidy_model %>% filter(term == "totnuf") %>% pull(p.value)
     if (length(slope_p) == 0) slope_p <- NA  # edge case handling
-    mutate(., sig_line = slope_p < 0.05, p = slope_p)
+    
+    r2 <- glance_model$r.squared
+    if (length(r2) == 0) r2 <- NA  # edge case handling
+    
+    mutate(., sig_line = slope_p < 0.05, p = slope_p, r2 = r2)
   }) %>%
   ungroup()
+
+unique(sig_models_TN$r2)
+unique(sig_models_TN$p)
+  
 
 tn1 = tn |> left_join(chloro_all) |> 
   ggplot(aes(x = totnuf, y = chl_use)) +

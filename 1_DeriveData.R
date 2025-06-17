@@ -1,6 +1,8 @@
 library(tidyverse)
 # devtools::install_github('hdugan/NTLlakeloads')
 library(NTLlakeloads)
+library(patchwork)
+library(broom)
 
 #################### Secchi ####################
 secchi = loadLTERsecchi() |> filter(lakeid == 'WI') |> 
