@@ -44,8 +44,8 @@ zoops_join = dt1 |>
     species_name %in% c("acanthocyclops", "mesocyclops edax", "tropocyclops prasinus mexicanus", "tropocyclops", "diacyclops thomasi") ~ "Copepoda",
     species_name %in% c("diaptomus spp", "aglaodiaptomus clavipes", "diaptomid", "calanoid") ~ "Copepoda",
     species_name %in% c("daphnia pulicaria", "daphnia retrocurva", "daphnia mendotae", "daphnia parvula", "diaphanosoma birgei", "daphnia") ~ "Daphnia",
-    species_name %in% c("bosmina", "chydorus") ~ "Branchiopoda",
-    species_name %in% c("sinobosmina fryei", "copepod nauplii", "copepodites") ~ "Small Cladocera",
+    species_name %in% c("bosmina", "chydorus", "sinobosmina fryei") ~ "Branchiopoda",
+    species_name %in% c("copepod nauplii", "copepodites") ~ "Small Cladocera",
     TRUE ~ "Other"
   ))
 
