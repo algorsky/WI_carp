@@ -1,4 +1,5 @@
 library(tidyverse)
+library(vegan)
 
 # North Temperate Lakes LTER: Macrophyte Rating - Madison Lakes Area 1995 - current
 # inUrl1  <- "https://pasta.lternet.edu/package/data/eml/knb-lter-ntl/23/30/aa5720aec0e577431faeee352b91a937" 
@@ -30,7 +31,7 @@ df_crosswalk <- df%>%
 #Depth below 2
 # Group by year and species, then count occurrences
 species_counts_by_year <- df_crosswalk %>%
-  filter(depth < 2.5)%>%
+  filter(depth < 2.5) %>%
   group_by(year4, label) %>%
   summarize(Count = n(), .groups = 'drop')
 
@@ -56,31 +57,31 @@ table_frequ <- species_counts_with_frequencies %>%
   dplyr::select(year4, label, Relative_Frequency_perc)%>%
   pivot_wider(names_from = year4, values_from = Relative_Frequency_perc)
 
+
 #combine Potamogeton praelongus and richardsonii
 #inclusive of 2m and below
 
 #Average based off year groupings
-data_category <- species_counts_with_frequencies%>%
-  mutate(Year = as.numeric(year4))%>%
-  mutate(year = ifelse(Year < 1998, "1995-1997",
-                       ifelse(Year > 1997 & Year < 2001, "1998-2000",
-                              ifelse(Year > 2000 & Year < 2004, "2001-2003",
-                                     ifelse(Year > 2003 & Year < 2008, "2004-2007",
-                                            ifelse(Year > 2007 & Year < 2011, "2008-2010",
-                                                   ifelse(Year > 2010 & Year < 2014, "2011-2013",
-                                                          ifelse(Year > 2013 & Year < 2017, "2014-2016", "2017-2018"))))))))
+# data_category <- species_counts_with_frequencies%>%
+#   mutate(Year = as.numeric(year4))%>%
+#   mutate(year = ifelse(Year < 1998, "1995-1997",
+#                        ifelse(Year > 1997 & Year < 2001, "1998-2000",
+#                               ifelse(Year > 2000 & Year < 2004, "2001-2003",
+#                                      ifelse(Year > 2003 & Year < 2008, "2004-2007",
+#                                             ifelse(Year > 2007 & Year < 2011, "2008-2010",
+#                                                    ifelse(Year > 2010 & Year < 2014, "2011-2013",
+#                                                           ifelse(Year > 2013 & Year < 2017, "2014-2016", "2017-2018"))))))))
+# 
+# data_category_summary <- data_category %>%
+#   group_by(year, label) %>%
+#   summarize(frequency = mean(Relative_Frequency)*100)
+# 
+# table_mean_freq <- data_category_summary %>% 
+#   dplyr::select(year, label, frequency) %>%
+#   pivot_wider(names_from = year, values_from = frequency)
 
-data_category_summary <- data_category %>%
-  group_by(year, label) %>%
-  summarize(frequency = mean(Relative_Frequency)*100)
 
-table_mean_freq <- data_category_summary %>% 
-  dplyr::select(year, label, frequency) %>%
-  pivot_wider(names_from = year, values_from = frequency)
-
-
-#Shannon
-library(vegan)
+################# Calculate Shannon Diversity index ################# 
 
 # Select only numeric columns (exclude 'label')
 df2_numeric <- table_frequ[, -1]  # or df2 %>% select(-label)
@@ -94,5 +95,9 @@ shannon_index <- apply(df2_numeric, 2, function(x) diversity(x, index = "shannon
 # Create a tidy dataframe for plotting or export
 shannon_index_df <- data.frame(
   year = names(shannon_index),
-  shannon = as.numeric(shannon_index)
+  shannon = round(as.numeric(shannon_index),2)
 )
+
+apply(shannon_index_df |> pivot_wider(names_from = 1, values_from = 2), 1, function(row) {
+  paste(paste(row, collapse = " & "), "\\\\")
+})
