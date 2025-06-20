@@ -1,7 +1,8 @@
-
+library(tidyverse)
 # Download data from EDI
 # North Temperate Lakes LTER: Macrophyte Biomass - Madison Lakes Area 1995 - current
-inUrl1  <- "https://pasta.lternet.edu/package/data/eml/knb-lter-ntl/24/31/a03d18be68db4cf2280846afe2643d5e" 
+inUrl1  <- "https://pasta.lternet.edu/package/data/eml/knb-lter-ntl/24/32/a03d18be68db4cf2280846afe2643d5e" 
+
 infile1 <- tempfile()
 try(download.file(inUrl1,infile1,method="curl",extra=paste0(' -A "',getOption("HTTPUserAgent"),'"')))
 if (is.na(file.size(infile1))) download.file(inUrl1,infile1,method="auto")
@@ -26,3 +27,4 @@ fil_algae_timeseries <- macrophyte_ntl %>%
 
 # Stats for paper 
 fil_algae_timeseries |> filter(year4 > 2008) |> summarise(min(fil_algae_sum), max(fil_algae_sum), sd(fil_algae_sum))
+tail(fil_algae_timeseries)
