@@ -37,7 +37,13 @@ pettitt_full_summary <- bind_rows(
 pettitt_significant <- pettitt_full_summary %>%
   filter(p_value < 0.05)
 
-print(pettitt_significant)
+# Print with midpoint of breakpoints 
+print(pettitt_significant |> 
+        mutate(
+          break_date = as.Date(break_date),
+          break_date2 = as.Date(break_date2),
+          midpoint = break_date + as.numeric(difftime(break_date2, break_date, units = "days"))/2
+        ))
 
 # Run for annual timeseries 
 run_pettitt_with_U(colonization, 'colonization_m', date_col = "year4")

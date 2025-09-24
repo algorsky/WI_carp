@@ -22,31 +22,38 @@ secchi_timeseries = ggplot() +
   geom_point(data = secchi, aes(x = sampledate, y = secnview, fill = removal), size = 1.1, shape = 21, alpha = 0.5) +
   geom_line(data = summary_means, aes(x = as.Date(paste0(year4, "-07-01")), y = mean_secchi), linewidth = 1) +
   ylab(expression(paste("Secchi (m)"))) +
-  theme_timeseries()
+  theme_timeseries() +
+  geom_vline(aes(xintercept = as.Date('2008-01-15')), linewidth = 0.3, linetype = 2)
 
 tn_timeseries <- ggplot() +
   geom_point(data = tn,aes(x = sampledate, y = totnuf, fill = removal), size = 1.1, shape = 21, alpha = 0.5) +
   geom_line(data = summary_means, aes(x = as.Date(paste0(year4, "-07-01")), y = mean_totnuf), linewidth = 1) +
   ylab(bquote(atop("Total nitrogen", "(" * mu * "g " * L^{-1} * ")"))) +
-  theme_timeseries()
+  theme_timeseries() +
+  geom_vline(aes(xintercept = as.Date('2008-06-18')), linewidth = 0.3, linetype = 2)
 
 tp_timeseries <- ggplot() +
   geom_point(data = tp,aes(x = sampledate, y = totpuf, fill = removal), size = 1.1, shape = 21, alpha = 0.5) +
   geom_line(data = summary_means, aes(x = as.Date(paste0(year4, "-07-01")), y = mean_totpuf), linewidth = 1) +
   ylab(bquote(atop("Total phosphorus", "(" * mu * "g " * L^{-1} * ")"))) +
-  theme_timeseries()
+  theme_timeseries() +
+  geom_vline(aes(xintercept = as.Date('2008-07-02')), linewidth = 0.3, linetype = 2)
 
 chloro_timeseries <- ggplot() +
   geom_point(data = chloro_all, aes(x = sampledate, y = chl_use, fill = removal),size = 1.1, shape = 21, alpha = 0.5) +
   geom_line(data = summary_means, aes(x = as.Date(paste0(year4, "-07-01")), y = mean_chla), linewidth = 1) +
   ylab(bquote(atop("Chlorophyll a", "(" * mu * "g " * L^{-1} * ")"))) +
-  theme_timeseries()
+  theme_timeseries() +
+  geom_vline(aes(xintercept = as.Date('2020-01-13')), linewidth = 0.3, linetype = 2)
+
 
 ls7_timeseries <- ggplot() +
   geom_point(data = ls7, aes(x = sampledate, y = redblue, fill = removal), size = 1.1, shape = 21, alpha = 0.5) +
   geom_line(data = summary_means, aes(x = as.Date(paste0(year4, "-07-01")), y = redblue), linewidth = 1) +
   ylab('RBindex') +
-  theme_timeseries()
+  theme_timeseries()  +
+  geom_vline(aes(xintercept = as.Date('2007-12-16')), linewidth = 0.3, linetype = 2)
+
 
 macro_timeseries <- ggplot(macrophyte_timeseries) +
   geom_point(aes(x = Year, y = `Maximum depth of plants (ft)`/3.281, fill = removal), size = 1.3, shape = 21) +
@@ -56,17 +63,21 @@ macro_timeseries <- ggplot(macrophyte_timeseries) +
   xlab("") +
   xlim(c(1995, 2025)) +
   theme_bw(base_size = 9) + 
-  theme(legend.position = "none")
+  theme(legend.position = "none")  +
+  geom_vline(aes(xintercept = 2010.5), linewidth = 0.3, linetype = 2)
+
 
 fil_timeseries <- ggplot(fil_algae_timeseries, aes(x = year4, y = fil_algae_sum, fill = removal)) +
   geom_bar(stat = "identity", color = "black", linewidth = 0.3) +
-  geom_vline(xintercept = 2008, linetype = "dashed") +
+  # geom_vline(xintercept = 2008, linetype = "dashed") +
   xlab("") +
   scale_x_continuous(limits = c(1995,2025), breaks = seq(1995, 2025, 5)) +
   ylab("Fil. algae (wet mass \nper rake throw)") +
   scale_fill_manual(values = c( "white", "grey30")) +
   theme_bw(base_size = 9) + 
-  theme(legend.position = "none")
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = 2008.5), linewidth = 0.3, linetype = 2)
+
 
 ################### Boxplots ###################
 theme_boxplot <- function() {
