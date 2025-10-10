@@ -5,9 +5,9 @@ library(patchwork)
 library(lubridate)
 library(cowplot)
 
-lakes = st_read('data/map/yld_study_lakes.shp')|>
+wingra = st_read('data/map/yld_study_lakes.shp')|>
   filter(LAKEID == "WI")
-wingra <- st_as_sf(wingra, crs = 4326)
+# wingra <- st_as_sf(wingra, crs = 4326)
 wingra_bath = st_read('data/map/wingra-contours-all.shp')
 
 ## Sites

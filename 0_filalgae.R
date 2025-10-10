@@ -12,9 +12,12 @@ macrophyte_ntl <- read_csv(infile1) |> filter(lakeid == "WI")
 #Filamentous algae
 fil_algae_timeseries <- macrophyte_ntl %>%
   mutate(fil_algae_wt = replace_na(fil_algae_wt, 0)) %>%
+  filter(transect %in% c(2,5,7,9,11)) |> 
   group_by(year4) %>%
   summarize(fil_algae_sum = sum(fil_algae_wt, na.rm = T), plant_wt_sum = sum(plant_wt_hand, na.rm = T)) %>%
   mutate(removal = ifelse(year4 < 2008, '< 2008', '≥ 2008'))
+
+
 
 #write_csv(fil_algae_timeseries, "data/fil_algae_timeseries.csv")
 # 
