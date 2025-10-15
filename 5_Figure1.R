@@ -78,6 +78,18 @@ fil_timeseries <- ggplot(fil_algae_timeseries, aes(x = year4, y = fil_algae_sum,
   theme(legend.position = "none") +
   geom_vline(aes(xintercept = 2008.5), linewidth = 0.3, linetype = 2)
 
+plant_timeseries <- ggplot(fil_algae_timeseries, aes(x = year4, y = plant_wt_sum, fill = removal)) +
+  geom_bar(stat = "identity", color = "black", linewidth = 0.3) +
+  # geom_vline(xintercept = 2008, linetype = "dashed") +
+  xlab("") +
+  scale_x_continuous(limits = c(1995,2025), breaks = seq(1995, 2025, 5)) +
+  ylab("Macrophyte (wet mass \nper rake throw)") +
+  scale_fill_manual(values = c( "white", "grey30")) +
+  theme_bw(base_size = 9) + 
+  theme(legend.position = "none") +
+  geom_vline(aes(xintercept = 2008.5), linewidth = 0.3, linetype = 2)
+
+
 
 ################### Boxplots ###################
 theme_boxplot <- function() {

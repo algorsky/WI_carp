@@ -48,5 +48,6 @@ print(pettitt_significant |>
 # Run for annual timeseries 
 run_pettitt_with_U(colonization, 'colonization_m', date_col = "year4")
 run_pettitt_with_U(fil_algae_timeseries, 'fil_algae_sum', date_col = "year4")
+run_pettitt_with_U(fil_algae_timeseries, 'plant_wt_sum', date_col = "year4")
 
 

@@ -48,7 +48,8 @@ tn <- nuts |>
   filter(totnuf > 12)|>
   mutate(year4 = year(sampledate))|>
   mutate(removal = ifelse(year(sampledate) < 2008, "<2008", ">=2008"))
-  # filter(year4 != 2020)
+
+# filter(year4 != 2020)
 
 tn |> group_by(year4) |> filter(n() <= 2)
 ggplot(tn) +
@@ -180,3 +181,4 @@ year_summary <- function(col_name) {
 year_summaries <- map_dfr(cols_to_check, year_summary)
 
 print(year_summaries)
+
