@@ -1,31 +1,36 @@
 library(sf)
 library(tidyverse)
 library(patchwork)
+library(smoothr)
+library(cowplot)
 
-wingra = st_read('data/map/yld_study_lakes.shp')|>
-  filter(LAKEID == "WI")
-# Use the polygon boundary (shoreline)
-wingra_shore <- st_boundary(st_union(wingra))
-# wingra <- st_as_sf(wingra, crs = 4326)
-# wingra_bath = st_read('data/map/wingra-contours-all.shp')
-wingra_bath = st_read('data/map/WingraBathymetry2025/WingraBathy_0.5.shp')
+wingra_bath = st_read('data/map/Wingra_bathymetry_2025.shp') 
+wingra_smooth <- smoothr::smooth(wingra_bath, method = "chaikin") %>%
+  mutate(area = st_area(.))
+
+hypsometry = wingra_smooth |> 
+  st_drop_geometry() |> 
+  group_by(Depth_m) |> 
+  summarise(area = sum(area)) |> 
+  arrange(area) |> 
+  mutate(area.diff = c(min(area), diff(area)))
+  
+sum(hypsometry$area.diff) # gut check 
+
 wingra_edge_labels <- wingra_bath |>
   mutate(geometry = st_line_sample(st_boundary(geometry), sample = 0.3)) |>  # midpoint along edge
   st_as_sf()
 
 ggplot() +
-  geom_sf(data = wingra, fill = "lightblue", color = "blue") +
-  geom_sf(data = wingra_bath |> arrange(Depth), fill = 'lightblue') +
+  # geom_sf(data = wingra, fill = "lightblue", color = "blue") +
+  geom_sf(data = wingra_smooth |> arrange(Depth_m), fill = 'lightblue') +
   geom_sf_text(
     data = wingra_edge_labels,
-    aes(label = Depth),
+    aes(label = Depth_m),
     color = "grey50",
     size = 3
   )
 
-
-# it has no CRS (check)
-st_crs(wingra_bath) <- st_crs(wingra)
 
 # Starting points of transects
 transect_starts_sf <- tribble(
@@ -37,7 +42,7 @@ transect_starts_sf <- tribble(
   "WI11", 43.051250, -89.431040
 ) |> 
   st_as_sf(coords = c("lon", "lat"), crs = 4326) |>
-  st_transform(st_crs(wingra))  # match Wingra CRS
+  st_transform(st_crs(wingra_smooth))  # match Wingra CRS
 
 # shore_points <- st_nearest_points(transect_starts, wingra_shore) |>
 #   st_cast("POINT")
@@ -81,17 +86,17 @@ transects_sf <- st_sf(geometry = transects_sfc)
 ################### Map of transects ####################
 p1 = ggplot() +
   # geom_sf(data = wingra, fill = "lightblue", color = "blue") +
-  geom_sf(data = wingra_bath |> arrange(Depth), fill = 'lightblue') +
+  geom_sf(data = wingra_smooth |> arrange(Depth_m), fill = 'lightblue') +
   geom_sf_text(
     data = wingra_edge_labels,
-    aes(label = Depth),
+    aes(label = Depth_m),
     color = "grey50",
     size = 2
   ) +
   geom_sf(data = transects_sf, color = "red", linewidth = 1) +
   # geom_label()
-  geom_sf(data = transect_starts, color = "red", size = 3) +
-  geom_sf_text(data = transect_starts, aes(label = site), size = 3, 
+  geom_sf(data = transect_starts_sf, color = "red", size = 3) +
+  geom_sf_text(data = transect_starts_sf, aes(label = site), size = 3, 
                nudge_x = 100, nudge_y = 50) + # labels
   # geom_sf(data = shore_points, color = "red", size = 3) +
   scale_y_continuous(breaks = c(43.05, 43.055)) +
@@ -105,8 +110,7 @@ p1 = ggplot() +
   ggspatial::annotation_scale( bar_cols = c("grey", "white"),  location = "br") +
   theme(aspect.ratio = 0.6); p1  # optional to fix square aspect
 
-
-# Macrophyte data
+####################### Macrophyte data #######################
 macro.df = macrophyte_ntl %>%
   mutate(fil_algae_wt = replace_na(fil_algae_wt, 0)) %>%
   mutate(plant_wt_hand = replace_na(plant_wt_hand, 0)) %>%
