@@ -6,7 +6,8 @@ acf(summary_means$mean_secchi, na.action = na.pass) #yes
 acf(summary_means$mean_totnuf, na.action = na.pass) #yes
 acf(summary_means$mean_totpuf, na.action = na.pass) #yes
 acf(summary_means$mean_chla, na.action = na.pass) #no
-acf(summary_means$fil_algae_sum, na.action = na.pass) #no
+acf(summary_means$plant_wt_spatial, na.action = na.pass) #yes
+acf(summary_means$fil_algae_spatial, na.action = na.pass) #no
 acf(summary_means$redblue, na.action = na.pass) #yes
 
 # To assess differences in water clarity pre vs. post removal, we
@@ -38,11 +39,13 @@ summary(gls_chloro)
 gls_RB <- gls(redblue ~ removal, data = summary_means |> filter(!is.na(redblue)), correlation = corAR1(form = ~ year4))
 summary(gls_RB)
 
-gls_fil <- gls(fil_algae_sum ~ removal, data = summary_means |> filter(!is.na(fil_algae_sum)))
-summary(gls_fil)
+gls_plant <- gls(plant_wt_spatial ~ removal, data = summary_means |> filter(!is.na(plant_wt_spatial)), correlation = corAR1(form = ~ year4))
+summary(gls_plant)
 
+gls_algae <- gls(fil_algae_spatial ~ removal, data = summary_means |> filter(!is.na(fil_algae_spatial)))
+summary(gls_algae)
 
-# Median before and after
+# Means before and after
 summary_means |> 
   group_by(removal) |> 
   summarise_all(median, na.rm = T)

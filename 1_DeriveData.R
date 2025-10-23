@@ -6,7 +6,7 @@ library(broom)
 
 #################### Secchi ####################
 secchi = loadLTERsecchi() |> filter(lakeid == 'WI') |> 
-  select(sampledate, year4, secnview) |>
+  dplyr::select(sampledate, year4, secnview) |>
   filter(month(sampledate) %in% c(6,7,8)) |>
   mutate(removal = ifelse(year(sampledate) < 2008, "<2008", ">=2008"))
 
@@ -19,7 +19,7 @@ nuts = loadLTERnutrients() |> filter(lakeid == 'WI')
 silica <- nuts |> 
   filter(month(sampledate) %in% c(6,7,8)) |> 
   filter(depth == 0) |> 
-  select(sampledate, year4, lakeid, drsif) |> 
+  dplyr::select(sampledate, year4, lakeid, drsif) |> 
   pivot_longer(cols = c(drsif)) |> 
   group_by(sampledate) |>
   summarise(drsif = mean(value, na.rm = T)) |> 
@@ -38,7 +38,7 @@ tn <- nuts |>
   filter(is.na(flagtotnuf_WSLH) | !str_detect(flagtotnuf_WSLH, "[AKLHU]")) |> 
   filter(is.na(flagtotnuf) | !str_detect(flagtotnuf, "[AKLHU]")) |> 
   mutate(kj_WSLH = kjdl_n_WSLH + no3no2_WSLH) |> 
-  select(sampledate, year4, lakeid, totnuf_WSLH, totnuf, kj_WSLH) |> 
+  dplyr::select(sampledate, year4, lakeid, totnuf_WSLH, totnuf, kj_WSLH) |> 
   mutate(kj_WSLH = kj_WSLH * 1000) |> 
   mutate(totnuf_WSLH = totnuf_WSLH * 1000) |> 
   pivot_longer(cols = c(totnuf_WSLH, totnuf, kj_WSLH)) |> 
@@ -61,7 +61,7 @@ tp <- nuts |>
   filter(depth == 0) |> 
   filter(is.na(flagtotpuf_WSLH) | !str_detect(flagtotpuf_WSLH, "[AKLHU]")) |> 
   filter(is.na(flagtotpuf) | !str_detect(flagtotpuf, "[AKLHU]")) |> 
-  select(sampledate, year4, lakeid, totpuf_WSLH, totpuf) |> 
+  dplyr::select(sampledate, year4, lakeid, totpuf_WSLH, totpuf) |> 
   mutate(totpuf_WSLH = totpuf_WSLH * 1000) |> 
   pivot_longer(cols = c(totpuf_WSLH, totpuf)) |> 
   filter(value < 400) %>%
@@ -85,7 +85,7 @@ macrophyte_dnr <- read_csv("data/dnr_macrophyte_sum.csv")
 macrophyte_timeseries<- macrophyte_dnr|>mutate(removal = ifelse(Year < 2008, "<2008", ">=2008"))
 
 colonization <- macrophyte_dnr %>%
-  select(Year, `Maximum depth of plants (ft)`) %>%
+  dplyr::select(Year, `Maximum depth of plants (ft)`) %>%
   rename(colonization_ft = `Maximum depth of plants (ft)`) %>%
   rename(year4 = Year) %>%
   mutate(colonization_m = colonization_ft*0.3048)
@@ -107,11 +107,11 @@ arb.spring <- arb.precip |>
   filter(month(DATE) %in% c(1,2,3,4,5,6,7,8)) |> 
   group_by(year4, NAME) |>
   summarise(arb.precip = sum(PRCP, na.rm = T), num_na = sum(is.na(PRCP))) |> 
-  select(year4, arb.precip)
+  dplyr::select(year4, arb.precip)
 
 #################### Landsat 7 ####################
 ls7 = read_csv('data/LS7_redblue_timeseries_export.csv') |> 
-  select(sampledate = date, redblue = mean) |> 
+  dplyr::select(sampledate = date, redblue = mean) |> 
   filter(month(sampledate) %in% c(6,7,8)) |> 
   mutate(removal = ifelse(year(sampledate) < 2008, "<2008", ">=2008"))
 
@@ -148,7 +148,8 @@ summary_means <- secchi_mean %>%
   left_join(chloro_mean, by = "year4")|>
   left_join(colonization, by = "year4")|>
   # left_join(zoop_summer_sum, by = "year4")|>
-  left_join(fil_algae_timeseries |> select(year4, fil_algae_sum), by = "year4")|>
+  left_join(benthic_spatial_year |> dplyr::select(year4, plant_wt_spatial), by = "year4")|>
+  left_join(benthic_spatial_year |> dplyr::select(year4, fil_algae_spatial), by = "year4")|>
   left_join(arb.spring, by = "year4") |> 
   left_join(ls7_mean, by = 'year4') |> 
   mutate(across(-year4, ~ ifelse(year4 == 2020, NA, .))) |> # Remove 2020 (lack of data)
@@ -158,12 +159,12 @@ summary_means <- secchi_mean %>%
 # Identify the years in the dataset
 all_years <- sort(unique(summary_means$year4))
 # Select numeric columns (or all columns you want to check)
-cols_to_check <- summary_means %>% select(-year4) %>% names()
+cols_to_check <- summary_means %>% dplyr::select(-year4) %>% names()
 
 # Function to get start, end, and missing years
 year_summary <- function(col_name) {
   df <- summary_means %>%
-    select(year4, all_of(col_name)) %>%
+    dplyr::select(year4, all_of(col_name)) %>%
     filter(!is.na(.data[[col_name]]))
   
   present_years <- sort(unique(df$year4))

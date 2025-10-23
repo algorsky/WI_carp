@@ -7,7 +7,7 @@ inUrl1  <- "https://pasta.lternet.edu/package/data/eml/knb-lter-ntl/23/31/62feec
 infile1 <- tempfile()
 try(download.file(inUrl1,infile1,method="curl"))
 
-d1 <- read_csv(infile1)|>
+d1 <- read_csv(infile1) |>
   filter(lakeid == "WI")
 
 crosswalk <- read_csv("data/crosswork_macrophyte.csv")

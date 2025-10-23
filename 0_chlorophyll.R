@@ -6,7 +6,7 @@ infile1 <- tempfile()
 try(download.file(inUrl1,infile1,method="curl",extra=paste0(' -A "',getOption("HTTPUserAgent"),'"')))
 if (is.na(file.size(infile1))) download.file(inUrl1,infile1,method="auto")
 
-chloro_lter<- read_csv(infile1)|> filter(lakeid == "WI") |>
+chloro_lter <- read_csv(infile1)|> filter(lakeid == "WI") |>
   filter(depth_range_m %in% c("0", "0-2"))|>  
   filter(month(sampledate) %in% c(6,7,8)) 
 
@@ -28,9 +28,10 @@ chloro_all <- chloro_lter %>%
     .groups = "drop"
   ) %>%
   filter(method_used == 'correct_fluor') |> 
-  select(lakeid, year4, sampledate, chl_use, method_used) |> 
+  dplyr::select(lakeid, year4, sampledate, chl_use, method_used) |> 
   mutate(removal = ifelse(year(sampledate) < 2008, "<2008", ">=2008"))
 
-# ggplot(chloro_lter) +
-#   geom_point(aes(x = sampledate, y = correct_chl_fluor)) +
-#   geom_point(aes(x = sampledate, y = uncorrect_chl_fluor), col = 'red')
+ggplot(chloro_lter) +
+  # geom_point(aes(x = sampledate, y = correct_chl_fluor)) +
+  geom_point(aes(x = sampledate, y = uncorrect_chl_fluor), col = 'red')
+  # geom_point(aes(x = sampledate, y = tri_chl_spec), col = 'blue')

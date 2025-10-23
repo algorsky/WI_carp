@@ -21,7 +21,7 @@ theme_timeseries <- function() {
 secchi_timeseries = ggplot() +
   geom_point(data = secchi, aes(x = sampledate, y = secnview, fill = removal), size = 1.1, shape = 21, alpha = 0.5) +
   geom_line(data = summary_means, aes(x = as.Date(paste0(year4, "-07-01")), y = mean_secchi), linewidth = 1) +
-  ylab(expression(paste("Secchi (m)"))) +
+  ylab("Secchi\ndepth (m)") +
   theme_timeseries() +
   geom_vline(aes(xintercept = as.Date('2008-01-15')), linewidth = 0.3, linetype = 2)
 
@@ -58,37 +58,63 @@ ls7_timeseries <- ggplot() +
 macro_timeseries <- ggplot(macrophyte_timeseries) +
   geom_point(aes(x = Year, y = `Maximum depth of plants (ft)`/3.281, fill = removal), size = 1.3, shape = 21) +
   geom_line(aes(x = Year, y = `Maximum depth of plants (ft)`/3.281)) +
-  ylab("Max colonization \ndepth (m)") +
+  ylab("Macrophyte\ncolonization \nmax depth (m)") +
   scale_fill_manual(values = c( "white", "black")) +
-  xlab("") +
   xlim(c(1995, 2025)) +
   theme_bw(base_size = 9) + 
-  theme(legend.position = "none")  +
+  theme(legend.position = "none", 
+        axis.title.x = element_blank()) +
   geom_vline(aes(xintercept = 2010.5), linewidth = 0.3, linetype = 2)
 
 
-fil_timeseries <- ggplot(fil_algae_timeseries, aes(x = year4, y = fil_algae_sum, fill = removal)) +
-  geom_bar(stat = "identity", color = "black", linewidth = 0.3) +
-  # geom_vline(xintercept = 2008, linetype = "dashed") +
-  xlab("") +
-  scale_x_continuous(limits = c(1995,2025), breaks = seq(1995, 2025, 5)) +
-  ylab("Fil. algae (wet mass \nper rake throw)") +
-  scale_fill_manual(values = c( "white", "grey30")) +
-  theme_bw(base_size = 9) + 
-  theme(legend.position = "none") +
-  geom_vline(aes(xintercept = 2008.5), linewidth = 0.3, linetype = 2)
+# fil_timeseries <- ggplot(fil_algae_timeseries, aes(x = year4, y = fil_algae_mean, fill = removal)) +
+#   geom_bar(stat = "identity", color = "black", linewidth = 0.3) +
+#   # geom_vline(xintercept = 2008, linetype = "dashed") +
+#   scale_x_continuous(limits = c(1995,2025), breaks = seq(1995, 2025, 5)) +
+#   ylab("Fil. algae (wet mass \nper rake throw)") +
+#   scale_fill_manual(values = c( "white", "grey30")) +
+#   theme_bw(base_size = 9) + 
+#   theme(legend.position = "none", 
+#         axis.title.x = element_blank()) +
+#   geom_vline(aes(xintercept = 2008.5), linewidth = 0.3, linetype = 2)
 
-plant_timeseries <- ggplot(fil_algae_timeseries, aes(x = year4, y = plant_wt_sum, fill = removal)) +
+plant_timeseries <- ggplot(fil_algae_timeseries, aes(x = year4, y = plant_wt_mean, fill = removal)) +
   geom_bar(stat = "identity", color = "black", linewidth = 0.3) +
   # geom_vline(xintercept = 2008, linetype = "dashed") +
-  xlab("") +
   scale_x_continuous(limits = c(1995,2025), breaks = seq(1995, 2025, 5)) +
   ylab("Macrophyte (wet mass \nper rake throw)") +
   scale_fill_manual(values = c( "white", "grey30")) +
   theme_bw(base_size = 9) + 
-  theme(legend.position = "none") +
+  theme(legend.position = "none", 
+        axis.title.x = element_blank()) +
   geom_vline(aes(xintercept = 2008.5), linewidth = 0.3, linetype = 2)
 
+bethic_plant_timeseries = ggplot(benthic_spatial) +
+  geom_col(aes(x = year4, y = plant_wt_spatial, fill = as.factor(depth))) + 
+  geom_col( data = data.frame(x = c(2020,2021), y = max(benthic_spatial_year$plant_wt_spatial)),
+            aes(x = x, y = y), fill = "grey") +
+  annotate('text', x = 2020, y = 1, label = 'not sampled', angle = 90, col = 'grey30', hjust = 0, size = 2) +
+  annotate('text', x = 2021, y = 1, label = 'not sampled', angle = 90, col = 'grey30', hjust = 0, size = 2) +
+  scale_fill_manual(values = c('#08c248', '#248c48', '#295e3b', '#203d2a'), name = 'Depth (m)') +
+  ylab("Macrophyte\nmean\nwet mass (g)") +
+  theme_bw(base_size = 9) + 
+  theme(legend.position = 'none', 
+        axis.title.x = element_blank()) +
+  geom_vline(aes(xintercept = 2009.5), linewidth = 0.3, linetype = 2)
+
+bethic_algae_timeseries = ggplot(benthic_spatial) +
+  geom_col(aes(x = year4, y = fil_algae_spatial, fill = as.factor(depth))) + 
+  geom_col( data = data.frame(x = c(2020,2021), y = max(benthic_spatial_year$fil_algae_spatial)),
+            aes(x = x, y = y), fill = "grey") +
+  annotate('text', x = 2020, y = 1, label = 'not sampled', angle = 90, col = 'grey30', hjust = 0, size = 2) +
+  annotate('text', x = 2021, y = 1, label = 'not sampled', angle = 90, col = 'grey30', hjust = 0, size = 2) +
+  scale_fill_manual(values = c('#08c248', '#248c48', '#295e3b', '#203d2a'), name = 'Depth (m)') +
+  ylab("Filamentous\nalgae mean\nwet mass (g)") +
+  theme_bw(base_size = 9) + 
+  theme(legend.position = 'bottom', 
+        axis.title.x = element_blank(), 
+        legend.key.size = unit(0.3,'cm')) +
+  geom_vline(aes(xintercept = 2007.5), linewidth = 0.3, linetype = 2); bethic_algae_timeseries
 
 
 ################### Boxplots ###################
@@ -135,7 +161,13 @@ ls7_boxplot <- ggplot(summary_means, aes(x = removal, y = redblue)) +
   annotate("text", x=2, y=Inf, vjust = 2, label= "p < 0.01", size = 2) +
   theme_boxplot()
 
-fil_box<- ggplot(fil_algae_timeseries, aes(x = removal, y = fil_algae_sum)) +
+benthic_plant_box <- ggplot(benthic_spatial_year, aes(x = removal, y = plant_wt_spatial)) +
+  geom_boxplot(outlier.color = NA) +
+  geom_jitter(aes(fill = removal), shape = 21, alpha = 0.5) +
+  annotate("text", x=1, y=Inf, vjust = 2, label= "p < 0.01", size = 2) +
+  theme_boxplot()
+
+benthic_algae_box <- ggplot(benthic_spatial_year, aes(x = removal, y = fil_algae_spatial)) +
   geom_boxplot(outlier.color = NA) +
   geom_jitter(aes(fill = removal), shape = 21, alpha = 0.5) +
   annotate("text", x=1, y=Inf, vjust = 2, label= "p < 0.01", size = 2) +
@@ -197,30 +229,32 @@ fil_box<- ggplot(fil_algae_timeseries, aes(x = removal, y = fil_algae_sum)) +
 
 # Define areas: rows 1–7 for timeseries, column 1; rows 1–7 for boxplots, column 2
 design <- c(
-  area(1, 1),  # secchi_timeseries
-  area(2, 1),  # tn_timeseries
-  area(3, 1),  # tp_timeseries
-  area(4, 1),  # chloro_timeseries
-  area(5, 1),  # dWL_timeseries
-  area(6, 1),  # macro_timeseries
-  area(7, 1),  # fil_timeseries
+  patchwork::area(1, 1),  # secchi_timeseries
+  patchwork::area(2, 1),  # tn_timeseries
+  patchwork::area(3, 1),  # tp_timeseries
+  patchwork::area(4, 1),  # chloro_timeseries
+  patchwork::area(5, 1),  # dWL_timeseries
+  patchwork::area(6, 1),  # macro_timeseries
+  patchwork::area(7, 1),  # macro_timeseries
+  patchwork::area(8, 1),  # fil_timeseries
   
-  area(1, 2),  # secchi_boxplot
-  area(2, 2),  # tn_boxplot
-  area(3, 2),  # tp_boxplot
-  area(4, 2),  # chloro_boxplot
-  area(5, 2),  # dWL_boxplot
-  # area(6, 2),  # blank_plot
-  area(7, 2)   # fil_box
+  patchwork::area(1, 2),  # secchi_boxplot
+  patchwork::area(2, 2),  # tn_boxplot
+  patchwork::area(3, 2),  # tp_boxplot
+  patchwork::area(4, 2),  # chloro_boxplot
+  patchwork::area(5, 2),  # dWL_boxplot
+  # patchwork::area(6, 2),  # blank_plot
+  patchwork::area(7, 2),   # plant_box
+  patchwork::area(8, 2)   # algae_box
 )
 
 # Combine using design layout
 wrap_plots(
   secchi_timeseries, tn_timeseries, tp_timeseries, chloro_timeseries,
-  ls7_timeseries, macro_timeseries, fil_timeseries,
+  ls7_timeseries, macro_timeseries, bethic_plant_timeseries, bethic_algae_timeseries,
   secchi_boxplot, tn_boxplot, tp_boxplot, chloro_boxplot,
   ls7_boxplot, #blank_plot, 
-  fil_box,
+  benthic_plant_box, benthic_algae_box,
   design = design) +
   plot_layout(widths = c(2, 1)) +
   plot_annotation(tag_levels = 'a', tag_prefix = "(", tag_suffix = ")") &

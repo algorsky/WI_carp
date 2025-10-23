@@ -3,8 +3,11 @@ library(tidyverse)
 library(patchwork)
 library(smoothr)
 library(cowplot)
+library(units)
+library(ggrepel)
 
-wingra_bath = st_read('data/map/Wingra_bathymetry_2025.shp') 
+wingra_bath = st_read('data/map/Wingra_bathymetry_2025.shp') %>%
+  mutate(area = st_area(.))
 wingra_smooth <- smoothr::smooth(wingra_bath, method = "chaikin") %>%
   mutate(area = st_area(.))
 
@@ -17,8 +20,12 @@ hypsometry = wingra_smooth |>
   
 sum(hypsometry$area.diff) # gut check 
 
-wingra_edge_labels <- wingra_bath |>
-  mutate(geometry = st_line_sample(st_boundary(geometry), sample = 0.3)) |>  # midpoint along edge
+# Make bathymetry labels with location 
+wingra_edge_labels <- wingra_bath %>% 
+  filter(area > set_units(40000, m^2)) %>% 
+  mutate(geometry = if_else(Depth_m %in% c(0,1,2,3),
+           st_line_sample(st_boundary(geometry), sample = c(0.85)), 
+           st_line_sample(st_boundary(geometry), sample = c(0.75)))) |>  # midpoint along edge
   st_as_sf()
 
 ggplot() +
@@ -85,13 +92,13 @@ transects_sf <- st_sf(geometry = transects_sfc)
 
 ################### Map of transects ####################
 p1 = ggplot() +
-  # geom_sf(data = wingra, fill = "lightblue", color = "blue") +
   geom_sf(data = wingra_smooth |> arrange(Depth_m), fill = 'lightblue') +
   geom_sf_text(
     data = wingra_edge_labels,
     aes(label = Depth_m),
-    color = "grey50",
-    size = 2
+    color = "grey20",
+    fontface = 'bold',
+    size = 1.5
   ) +
   geom_sf(data = transects_sf, color = "red", linewidth = 1) +
   # geom_label()
@@ -178,13 +185,13 @@ plot_grid(
   p1 + theme(plot.margin = margin(t=5, r=200, b=5, l=0)), p2, 
   ncol = 1, 
   rel_heights = c(0.6, 1),
-  labels = c("a)", "b)"),
+  labels = c("(a)", "(b)"),
   label_size = 8,
   label_fontface = "plain",
   label_x = 0,   # left-align labels
   label_y = 1    # top of the plot
 )
 
-ggsave("figures/FigureX.png", width = 6.5, height = 5, units = 'in', dpi = 500, 
+ggsave("figures/FigureS1.png", width = 6.5, height = 5, units = 'in', dpi = 500, 
        bg = 'white')
 

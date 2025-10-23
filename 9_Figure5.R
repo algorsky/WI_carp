@@ -2,15 +2,17 @@ library(tidyverse)
 library(lavaan) # for SEM
 library(semPlot)
 library(cowplot)
+library(magick)
 
 # Renaming just so the final plot is legible 
-df = summary_medians |>  
+df = summary_means |>  
   left_join(zoops_year |> filter(group == 'Daphnia') |> rename(year4 = year)) |> 
-  rename(filA = fil_algae_sum, precip = arb.precip,
-         chl = median_chla, secchi = median_secchi, TP = median_totpuf, 
-         TN = median_totnuf, daphnia = density) |> 
+  rename(filA = fil_algae_spatial, plants = plant_wt_spatial,
+         precip = arb.precip,
+         chl = mean_chla, secchi = mean_secchi, TP = mean_totpuf, 
+         TN = mean_totnuf, daphnia = density) |> 
   filter(removal == '>=2008') |> # just analyze post group
-  select(secchi, TN, TP, chl, filA, precip, daphnia) |> 
+  dplyr::select(secchi, TN, TP, chl, filA, precip, daphnia) |> 
   mutate(
     TN_mol = TN / 14.01,
     TP_mol = TP / 30.97,
@@ -64,6 +66,18 @@ semPaths(fit,
          intercepts = FALSE # hide intercepts
 )
 
+png("figures/FigureSEM_N.png", width = 3, height = 2.5, units = 'in', res = 500)
+semPaths(fit, what = "std", whatLabels = "est", layout = "tree2",
+         edge.label.cex = 2, 
+         sizeMan = 12, sizeLat = 10, edge.color = "black",
+         curveAdjacent = FALSE, style = "lisrel", nCharNodes = 7,
+         residuals = FALSE, intercepts = FALSE, 
+         sizeInt = 5,
+         margin = 0.1, 
+         label.cex = 1.2,
+         layoutScale = 1.3)
+dev.off()
+
 ########## Model focused on phosphorus ##########
 
 model2 <- '
@@ -108,7 +122,7 @@ s1 = semPaths(fit2,
               intercepts = FALSE # hide intercepts
 )
 
-png("figures/FigureSEM.png", width = 3, height = 2.5, units = 'in', res = 500)
+png("figures/FigureSEM_P.png", width = 3, height = 2.5, units = 'in', res = 500)
 semPaths(fit2, what = "std", whatLabels = "est", layout = "tree2",
          edge.label.cex = 2, 
          sizeMan = 12, sizeLat = 10, edge.color = "black",
@@ -126,7 +140,7 @@ summary_means %>%
   filter(year4 >= 2008) %>%
   filter(group %in% c("Daphnia", "Copepoda")) %>%
   group_by(group) %>%
-  do(tidy(lm(density ~ fil_algae_sum, data = .)))
+  do(tidy(lm(density ~ fil_algae_spatial, data = .)))
 
 # Code to Extract R2
 summary_means %>%
@@ -134,15 +148,15 @@ summary_means %>%
   filter(year4 >= 2008) %>%
   filter(group %in% c("Daphnia", "Copepoda")) %>%
   group_by(group) %>%
-  do(glance(lm(density ~ fil_algae_sum, data = .))) %>%
-  select(group, r.squared, adj.r.squared, p.value)
+  do(glance(lm(density ~ fil_algae_spatial, data = .))) %>%
+  dplyr::select(group, r.squared, adj.r.squared, p.value)
 
 z1 = summary_means |> left_join(zoops_year |> rename(year4 = year)) |> 
   filter(year4 >= 2008) |> 
   filter(group %in% c('Daphnia','Copepoda')) |> 
   ggplot() +
-  geom_smooth(aes(x = fil_algae_sum, y = density, color = group, fill = group), method = "lm") +
-  geom_point(aes(x = fil_algae_sum, y = density, fill = group), size = 1.2, shape = 21) +
+  geom_smooth(aes(x = fil_algae_spatial, y = density, color = group, fill = group), method = "lm") +
+  geom_point(aes(x = fil_algae_spatial, y = density, fill = group), size = 1.2, shape = 21) +
   scale_fill_manual(values = c('grey20','grey80')) +
   scale_color_manual(values = c('grey20','grey80')) +
   # facet_wrap(~group) +
@@ -153,10 +167,11 @@ z1 = summary_means |> left_join(zoops_year |> rename(year4 = year)) |>
   theme(legend.position = 'inside', legend.position.inside = c(0.25,0.8), legend.title = element_blank())
 
 # Load SEM plot and combine 
-sem_image <- ggdraw() + draw_image("figures/FigureSEM.png")
+sem_image <- ggdraw() + draw_image("figures/FigureSEM_P.png")
 z1 + sem_image + 
   plot_layout(widths = c(1,1.5)) +  # side-by-side
   plot_annotation(tag_levels = 'a', tag_prefix = "(", tag_suffix = ")") &
   theme(plot.tag = element_text(size = 8))
 ggsave("figures/Figure5.png", width = 6.5, height = 3, units = 'in', dpi = 500)
+
 
