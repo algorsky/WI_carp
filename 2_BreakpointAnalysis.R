@@ -30,7 +30,7 @@ pettitt_full_summary <- bind_rows(
   run_pettitt_with_U(tn, "totnuf"),
   run_pettitt_with_U(tp, "totpuf"),
   run_pettitt_with_U(tpm, "tpm"),
-  run_pettitt_with_U(chloro_all %>% filter(year4 >= 2004), "chl_use"),
+  run_pettitt_with_U(chloro_all, "chl_use"),
   run_pettitt_with_U(ls7, "redblue")
 )
 

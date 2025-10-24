@@ -4,6 +4,7 @@ library(NTLlakeloads)
 library(patchwork)
 library(broom)
 
+# Filter to data from June through August
 usemonths = c(6,7,8)
 
 #################### Secchi ####################

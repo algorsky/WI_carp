@@ -51,7 +51,7 @@ chloro_timeseries <- ggplot() +
   geom_line(data = summary_means, aes(x = as.Date(paste0(year4, "-07-01")), y = mean_chla), linewidth = 1) +
   ylab(bquote(atop("Chlorophyll a", "(" * mu * "g " * L^{-1} * ")"))) +
   theme_timeseries() +
-  geom_vline(aes(xintercept = as.Date('2020-01-13')), linewidth = 0.3, linetype = 2)
+  geom_vline(aes(xintercept = as.Date('2003-07-19')), linewidth = 0.3, linetype = 2)
 
 ls7_timeseries <- ggplot() +
   geom_point(data = ls7, aes(x = sampledate, y = redblue, fill = removal), size = 1.1, shape = 21, alpha = 0.5) +
