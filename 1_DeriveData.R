@@ -4,10 +4,12 @@ library(NTLlakeloads)
 library(patchwork)
 library(broom)
 
+usemonths = c(6,7,8)
+
 #################### Secchi ####################
 secchi = loadLTERsecchi() |> filter(lakeid == 'WI') |> 
   dplyr::select(sampledate, year4, secnview) |>
-  filter(month(sampledate) %in% c(6,7,8)) |>
+  filter(month(sampledate) %in% usemonths) |>
   mutate(removal = ifelse(year(sampledate) < 2008, "<2008", ">=2008"))
 
 secchi |> group_by(year4) |> filter(n() <= 2)
@@ -17,7 +19,7 @@ nuts = loadLTERnutrients() |> filter(lakeid == 'WI')
 
 # Silica
 silica <- nuts |> 
-  filter(month(sampledate) %in% c(6,7,8)) |> 
+  filter(month(sampledate) %in% usemonths) |> 
   filter(depth == 0) |> 
   dplyr::select(sampledate, year4, lakeid, drsif) |> 
   pivot_longer(cols = c(drsif)) |> 
@@ -33,7 +35,7 @@ ggplot(silica) +
 
 # Total unfiltered nitrogen
 tn <- nuts |> 
-  filter(month(sampledate) %in% c(6,7,8)) |> 
+  filter(month(sampledate) %in% usemonths) |> 
   filter(depth == 0) |> 
   filter(is.na(flagtotnuf_WSLH) | !str_detect(flagtotnuf_WSLH, "[AKLHU]")) |> 
   filter(is.na(flagtotnuf) | !str_detect(flagtotnuf, "[AKLHU]")) |> 
@@ -57,7 +59,7 @@ ggplot(tn) +
 
 # Total unfiltered phosphorus 
 tp <- nuts |> 
-  filter(month(sampledate) %in% c(6,7,8)) |> 
+  filter(month(sampledate) %in% usemonths) |> 
   filter(depth == 0) |> 
   filter(is.na(flagtotpuf_WSLH) | !str_detect(flagtotpuf_WSLH, "[AKLHU]")) |> 
   filter(is.na(flagtotpuf) | !str_detect(flagtotpuf, "[AKLHU]")) |> 
@@ -76,9 +78,31 @@ ggplot(tp) +
   geom_point(aes(x = sampledate, y = totpuf))
 
 #################### Chlorophyll ####################
-source('0_chlorophyll.R')
+# Download file from EDI
+inUrl1  <- "https://pasta.lternet.edu/package/data/eml/knb-lter-ntl/38/30/66796c3bc77617e7cc95c4b09d4995c5" 
+infile1 <- tempfile()
+try(download.file(inUrl1,infile1,method="curl",extra=paste0(' -A "',getOption("HTTPUserAgent"),'"')))
+if (is.na(file.size(infile1))) download.file(inUrl1,infile1,method="auto")
 
-chloro_all |> group_by(year4) |> filter(n() <= 2)
+chloro_all <- read_csv(infile1)|> filter(lakeid == "WI") |>
+  filter(depth_range_m %in% c("0", "0-2"))|>  
+  filter(month(sampledate) %in% usemonths) %>% 
+  dplyr::select(sampledate, year4, chl_use = uncorrect_chl_fluor) %>% 
+  filter(!is.na(chl_use)) %>% 
+  mutate(removal = ifelse(year(sampledate) < 2008, "<2008", ">=2008"))
+
+#################### TPM ####################
+# Package ID: knb-lter-ntl.226.8 Cataloging System:https://pasta.edirepository.org.
+# Data set title: North Temperate Lakes LTER: Total Particulate Matter  - Madison Lakes Area 2000 - 2013.
+inUrl1  <- "https://pasta.lternet.edu/package/data/eml/knb-lter-ntl/226/8/b80160e542d4bcf7d614be03eea6f8a4" 
+infile1 <- tempfile()
+try(download.file(inUrl1,infile1,method="curl",extra=paste0(' -A "',getOption("HTTPUserAgent"),'"')))
+
+tpm = read_csv(infile1) |> filter(lakeid == 'WI') |> 
+  dplyr::select(sampledate, year4, tpm) |>
+  filter(month(sampledate) %in% usemonths) |>
+  mutate(removal = ifelse(year(sampledate) < 2008, "<2008", ">=2008"))
+
 #################### DNR Macrophyte ####################
 macrophyte_dnr <- read_csv("data/dnr_macrophyte_sum.csv")
 
@@ -112,7 +136,7 @@ arb.spring <- arb.precip |>
 #################### Landsat 7 ####################
 ls7 = read_csv('data/LS7_redblue_timeseries_export.csv') |> 
   dplyr::select(sampledate = date, redblue = mean) |> 
-  filter(month(sampledate) %in% c(6,7,8)) |> 
+  filter(month(sampledate) %in% usemonths) |> 
   mutate(removal = ifelse(year(sampledate) < 2008, "<2008", ">=2008"))
 
 #################### Summary means ####################
@@ -133,6 +157,10 @@ tp_mean = tp |>
   group_by(year4) |> 
   summarise(mean_totpuf = mean(totpuf, na.rm = TRUE))
 
+tpm_mean = tpm %>% 
+  group_by(year4) |> 
+  summarise(mean_tpm = mean(tpm, na.rm = TRUE))
+
 chloro_mean = chloro_all |> 
   group_by(year4) |> 
   summarise(mean_chla = mean(chl_use, na.rm = TRUE))
@@ -145,6 +173,7 @@ summary_means <- secchi_mean %>%
   left_join(silica_mean, by = 'year4') |> 
   left_join(tn_mean, by = "year4") |>
   left_join(tp_mean, by = "year4") |>
+  left_join(tpm_mean, by = "year4") |>
   left_join(chloro_mean, by = "year4")|>
   left_join(colonization, by = "year4")|>
   # left_join(zoop_summer_sum, by = "year4")|>

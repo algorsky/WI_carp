@@ -5,6 +5,7 @@ library(nlme)
 acf(summary_means$mean_secchi, na.action = na.pass) #yes
 acf(summary_means$mean_totnuf, na.action = na.pass) #yes
 acf(summary_means$mean_totpuf, na.action = na.pass) #yes
+acf(summary_means$mean_tpm, na.action = na.pass) #no
 acf(summary_means$mean_chla, na.action = na.pass) #no
 acf(summary_means$plant_wt_spatial, na.action = na.pass) #yes
 acf(summary_means$fil_algae_spatial, na.action = na.pass) #no
@@ -32,6 +33,9 @@ summary(gls_tn)
 
 gls_tp <-  gls(mean_totpuf ~ removal, data = summary_means |> filter(!is.na(mean_totpuf)), correlation = corAR1(form = ~ year4))
 summary(gls_tp)
+
+gls_tpm <-  gls(mean_tpm ~ removal, data = summary_means |> filter(!is.na(mean_tpm)))
+summary(gls_tpm)
 
 gls_chloro <- gls(mean_chla ~ removal, data = summary_means |> filter(!is.na(mean_chla)))
 summary(gls_chloro)

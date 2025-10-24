@@ -39,13 +39,19 @@ tp_timeseries <- ggplot() +
   theme_timeseries() +
   geom_vline(aes(xintercept = as.Date('2008-07-02')), linewidth = 0.3, linetype = 2)
 
+tpm_timeseries <- ggplot() +
+  geom_point(data = tpm, aes(x = sampledate, y = tpm, fill = removal), size = 1.1, shape = 21, alpha = 0.5) +
+  geom_line(data = summary_means, aes(x = as.Date(paste0(year4, "-07-01")), y = mean_tpm), linewidth = 1) +
+  ylab(bquote(atop("TPM", "(mg " * L^{-1} * ")"))) +
+  theme_timeseries() +
+  geom_vline(aes(xintercept = as.Date('2006-08-15')), linewidth = 0.3, linetype = 2)
+
 chloro_timeseries <- ggplot() +
   geom_point(data = chloro_all, aes(x = sampledate, y = chl_use, fill = removal),size = 1.1, shape = 21, alpha = 0.5) +
   geom_line(data = summary_means, aes(x = as.Date(paste0(year4, "-07-01")), y = mean_chla), linewidth = 1) +
   ylab(bquote(atop("Chlorophyll a", "(" * mu * "g " * L^{-1} * ")"))) +
   theme_timeseries() +
   geom_vline(aes(xintercept = as.Date('2020-01-13')), linewidth = 0.3, linetype = 2)
-
 
 ls7_timeseries <- ggplot() +
   geom_point(data = ls7, aes(x = sampledate, y = redblue, fill = removal), size = 1.1, shape = 21, alpha = 0.5) +
@@ -149,6 +155,12 @@ tp_boxplot <- ggplot(summary_means, aes(x = removal, y = mean_totpuf)) +
   annotate("text", x=2, y=Inf, vjust = 1, label= "p < 0.01", size = 2) +
   theme_boxplot()
 
+tpm_boxplot <- ggplot(summary_means, aes(x = removal, y = mean_tpm)) +
+  geom_boxplot(outlier.color = NA) +
+  geom_jitter(aes(fill = removal), shape = 21, alpha = 0.5) +
+  annotate("text", x=2, y=Inf, vjust = 1, label= "p < 0.05", size = 2) +
+  theme_boxplot()
+
 chloro_boxplot <- ggplot(summary_means, aes(x = removal, y = mean_chla)) +
   geom_boxplot(outlier.color = NA) +
   geom_jitter(aes(fill = removal), shape = 21, alpha = 0.5) +
@@ -158,7 +170,7 @@ chloro_boxplot <- ggplot(summary_means, aes(x = removal, y = mean_chla)) +
 ls7_boxplot <- ggplot(summary_means, aes(x = removal, y = redblue)) +
   geom_boxplot(outlier.color = NA) +
   geom_jitter(aes(fill = removal), shape = 21, alpha = 0.5) +
-  annotate("text", x=2, y=Inf, vjust = 2, label= "p < 0.01", size = 2) +
+  annotate("text", x=2, y=Inf, vjust = 1, label= "p < 0.01", size = 2) +
   theme_boxplot()
 
 benthic_plant_box <- ggplot(benthic_spatial_year, aes(x = removal, y = plant_wt_spatial)) +
@@ -233,26 +245,28 @@ design <- c(
   patchwork::area(2, 1),  # tn_timeseries
   patchwork::area(3, 1),  # tp_timeseries
   patchwork::area(4, 1),  # chloro_timeseries
-  patchwork::area(5, 1),  # dWL_timeseries
-  patchwork::area(6, 1),  # macro_timeseries
+  patchwork::area(5, 1),  # tpm_timeseries
+  patchwork::area(6, 1),  # dWL_timeseries
   patchwork::area(7, 1),  # macro_timeseries
-  patchwork::area(8, 1),  # fil_timeseries
+  patchwork::area(8, 1),  # macro_timeseries
+  patchwork::area(9, 1),  # fil_timeseries
   
   patchwork::area(1, 2),  # secchi_boxplot
   patchwork::area(2, 2),  # tn_boxplot
   patchwork::area(3, 2),  # tp_boxplot
   patchwork::area(4, 2),  # chloro_boxplot
-  patchwork::area(5, 2),  # dWL_boxplot
+  patchwork::area(5, 2),  # tpm_boxplot
+  patchwork::area(6, 2),  # dWL_boxplot
   # patchwork::area(6, 2),  # blank_plot
-  patchwork::area(7, 2),   # plant_box
-  patchwork::area(8, 2)   # algae_box
+  patchwork::area(8, 2),   # plant_box
+  patchwork::area(9, 2)   # algae_box
 )
 
 # Combine using design layout
 wrap_plots(
-  secchi_timeseries, tn_timeseries, tp_timeseries, chloro_timeseries,
+  secchi_timeseries, tn_timeseries, tp_timeseries, chloro_timeseries, tpm_timeseries,
   ls7_timeseries, macro_timeseries, bethic_plant_timeseries, bethic_algae_timeseries,
-  secchi_boxplot, tn_boxplot, tp_boxplot, chloro_boxplot,
+  secchi_boxplot, tn_boxplot, tp_boxplot, chloro_boxplot, tpm_boxplot,
   ls7_boxplot, #blank_plot, 
   benthic_plant_box, benthic_algae_box,
   design = design) +
@@ -260,5 +274,5 @@ wrap_plots(
   plot_annotation(tag_levels = 'a', tag_prefix = "(", tag_suffix = ")") &
   theme(plot.tag = element_text(size = 8))
 
-ggsave("figures/Figure1.png", width = 6.5, height = 8, units = 'in', dpi = 500)
+ggsave("figures/Figure1.png", width = 6.5, height = 9, units = 'in', dpi = 500)
 
