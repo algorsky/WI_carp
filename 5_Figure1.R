@@ -18,6 +18,7 @@ theme_timeseries <- function() {
   )
 }
 
+
 secchi_timeseries = ggplot() +
   geom_point(data = secchi, aes(x = sampledate, y = secnview, fill = removal), size = 1.1, shape = 21, alpha = 0.5) +
   geom_line(data = summary_means, aes(x = as.Date(paste0(year4, "-07-01")), y = mean_secchi), linewidth = 1) +
@@ -64,36 +65,15 @@ ls7_timeseries <- ggplot() +
 macro_timeseries <- ggplot(macrophyte_timeseries) +
   geom_point(aes(x = Year, y = `Maximum depth of plants (ft)`/3.281, fill = removal), size = 1.3, shape = 21) +
   geom_line(aes(x = Year, y = `Maximum depth of plants (ft)`/3.281)) +
+  geom_rect(aes(xmin = 1995, xmax = 2004.5, ymin = 2.59, ymax = 4), fill = "grey") +
+  annotate('text', x = 2000, y = 2.7, label = 'not sampled', angle = 90, col = 'grey30', hjust = 0, size = 2) +
   ylab("Macrophyte\ncolonization \nmax depth (m)") +
   scale_fill_manual(values = c( "white", "black")) +
-  xlim(c(1995, 2025)) +
+  scale_x_continuous(breaks = seq(1995,2020, by = 5), limits = c(1995,2025)) +
   theme_bw(base_size = 9) + 
   theme(legend.position = "none", 
         axis.title.x = element_blank()) +
-  geom_vline(aes(xintercept = 2010.5), linewidth = 0.3, linetype = 2)
-
-
-# fil_timeseries <- ggplot(fil_algae_timeseries, aes(x = year4, y = fil_algae_mean, fill = removal)) +
-#   geom_bar(stat = "identity", color = "black", linewidth = 0.3) +
-#   # geom_vline(xintercept = 2008, linetype = "dashed") +
-#   scale_x_continuous(limits = c(1995,2025), breaks = seq(1995, 2025, 5)) +
-#   ylab("Fil. algae (wet mass \nper rake throw)") +
-#   scale_fill_manual(values = c( "white", "grey30")) +
-#   theme_bw(base_size = 9) + 
-#   theme(legend.position = "none", 
-#         axis.title.x = element_blank()) +
-#   geom_vline(aes(xintercept = 2008.5), linewidth = 0.3, linetype = 2)
-
-plant_timeseries <- ggplot(fil_algae_timeseries, aes(x = year4, y = plant_wt_mean, fill = removal)) +
-  geom_bar(stat = "identity", color = "black", linewidth = 0.3) +
-  # geom_vline(xintercept = 2008, linetype = "dashed") +
-  scale_x_continuous(limits = c(1995,2025), breaks = seq(1995, 2025, 5)) +
-  ylab("Macrophyte (wet mass \nper rake throw)") +
-  scale_fill_manual(values = c( "white", "grey30")) +
-  theme_bw(base_size = 9) + 
-  theme(legend.position = "none", 
-        axis.title.x = element_blank()) +
-  geom_vline(aes(xintercept = 2008.5), linewidth = 0.3, linetype = 2)
+  geom_vline(aes(xintercept = 2010.5), linewidth = 0.3, linetype = 2); macro_timeseries
 
 bethic_plant_timeseries = ggplot(benthic_spatial) +
   geom_col(aes(x = year4, y = plant_wt_spatial, fill = as.factor(depth))) + 
@@ -103,6 +83,7 @@ bethic_plant_timeseries = ggplot(benthic_spatial) +
   annotate('text', x = 2021, y = 1, label = 'not sampled', angle = 90, col = 'grey30', hjust = 0, size = 2) +
   scale_fill_manual(values = c('#08c248', '#248c48', '#295e3b', '#203d2a'), name = 'Depth (m)') +
   ylab("Macrophyte\nmean\nwet mass (g)") +
+  scale_x_continuous(breaks = seq(1995,2020, by = 5), limits = c(1995,2025)) +
   theme_bw(base_size = 9) + 
   theme(legend.position = 'none', 
         axis.title.x = element_blank()) +
@@ -116,6 +97,7 @@ bethic_algae_timeseries = ggplot(benthic_spatial) +
   annotate('text', x = 2021, y = 1, label = 'not sampled', angle = 90, col = 'grey30', hjust = 0, size = 2) +
   scale_fill_manual(values = c('#08c248', '#248c48', '#295e3b', '#203d2a'), name = 'Depth (m)') +
   ylab("Filamentous\nalgae mean\nwet mass (g)") +
+  scale_x_continuous(breaks = seq(1995,2020, by = 5), limits = c(1995,2025)) +
   theme_bw(base_size = 9) + 
   theme(legend.position = 'bottom', 
         axis.title.x = element_blank(), 
