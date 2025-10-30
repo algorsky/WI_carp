@@ -33,8 +33,10 @@ run_pettitt_with_autocorr <- function(df, var_name, date_col = "sampledate") {
   if (is.na(rho1)) rho1 <- 0  # fallback if acf fails (e.g., all constant)
   
   # --- 2. Compute effective sample size ---
-  N_eff <- N * (1 - rho1) / (1 + rho1)
-  N_eff <- max(2, N_eff) # avoid division by 0 or tiny numbers
+  # N_eff <- N * (1 - rho1) / (1 + rho1)
+  # N_eff <- max(2, N_eff) # avoid division by 0 or tiny numbers
+  
+  N_eff = N / (1 + 2 * rho1)
   
   # --- 3. Run Pettitt’s test as usual ---
   test_result <- pettitt.test(df_clean[[var_name]])
@@ -66,7 +68,7 @@ pettitt_full_summary <- bind_rows(
   run_pettitt_with_autocorr(tn, "totnuf"),
   run_pettitt_with_autocorr(tp, "totpuf"),
   run_pettitt_with_autocorr(tpm, "tpm"),
-  run_pettitt_with_autocorr(chloro_all %>% filter(year4 >= 2004), "chl_use"),
+  run_pettitt_with_autocorr(chloro_all, "chl_use"),
   run_pettitt_with_autocorr(ls7, "redblue")
 )
 
