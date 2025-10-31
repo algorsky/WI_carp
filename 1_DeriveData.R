@@ -15,6 +15,13 @@ secchi = loadLTERsecchi() |> filter(lakeid == 'WI') |>
 
 secchi |> group_by(year4) |> filter(n() <= 2)
 
+secchi.may = loadLTERsecchi() |> filter(lakeid == 'WI') |> 
+  dplyr::select(sampledate, year4, secnview) |>
+  filter(month(sampledate) %in% 5) %>% 
+  group_by(year4) %>% 
+  summarise(secnview = max(secnview, na.rm = T)) %>% 
+  mutate(removal = ifelse(year4 < 2008, "<2008", ">=2008"))
+
 #################### Nutrients ####################
 nuts = loadLTERnutrients() |> filter(lakeid == 'WI')
 

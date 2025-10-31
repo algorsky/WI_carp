@@ -63,6 +63,8 @@ ls7_timeseries <- ggplot() +
 
 
 macro_timeseries <- ggplot(macrophyte_timeseries) +
+  geom_point(data = secchi.may, aes(x = year4, y = secnview)) + 
+  geom_line(data = secchi.may, aes(x = year4, y = secnview)) + 
   geom_point(aes(x = Year, y = `Maximum depth of plants (ft)`/3.281, fill = removal), size = 1.3, shape = 21) +
   geom_line(aes(x = Year, y = `Maximum depth of plants (ft)`/3.281)) +
   geom_rect(aes(xmin = 1995, xmax = 2004.5, ymin = 2.59, ymax = 4), fill = "grey") +
