@@ -151,25 +151,52 @@ summary_means %>%
   do(glance(lm(density ~ fil_algae_spatial, data = .))) %>%
   dplyr::select(group, r.squared, adj.r.squared, p.value)
 
+summary_means %>%
+  filter(year4 >= 2008) %>%
+  do(glance(lm(mean_chla ~ fil_algae_spatial, data = .))) %>%
+  dplyr::select(r.squared, adj.r.squared, p.value)
+
+
 z1 = summary_means |> left_join(zoops_year |> rename(year4 = year)) |> 
   filter(year4 >= 2008) |> 
   filter(group %in% c('Daphnia','Copepoda')) |> 
   ggplot() +
-  geom_smooth(aes(x = fil_algae_spatial, y = density, color = group, fill = group), method = "lm") +
-  geom_point(aes(x = fil_algae_spatial, y = density, fill = group), size = 1.2, shape = 21) +
+  geom_smooth(aes(x = fil_algae_spatial, y = density/1000, color = group, fill = group), method = "lm") +
+  geom_point(aes(x = fil_algae_spatial, y = density/1000, fill = group), size = 1.2, shape = 21) +
   scale_fill_manual(values = c('grey20','grey80')) +
   scale_color_manual(values = c('grey20','grey80')) +
   # facet_wrap(~group) +
-  ylab('Median summer zooplankton density (#/L)') +
+  ylab('Mean zooplankton\ndensity (#/mL)') +
   # ylab(expression(paste("Mean summer zooplankton biomass", " (", µ,"g ", L^-1,")")))+
   xlab("Fil. algae (wet mass per rake throw)")+
   theme_bw(base_size = 9) +
-  theme(legend.position = 'inside', legend.position.inside = c(0.25,0.8), legend.title = element_blank())
+  theme(legend.position = 'inside', 
+        legend.position.inside = c(0.2,0.77), 
+        legend.title = element_blank(), 
+        legend.text = element_text(size = 6),
+        legend.background = element_blank(),
+        legend.key.size = unit(0.4, 'cm'))
+
+z2 = summary_means %>% 
+  filter(year4 >= 2008, !is.na(mean_chla)) |> 
+  ggplot() +
+  geom_smooth(aes(x = fil_algae_spatial, y = mean_chla), method = "lm", color = 'grey20') +
+  geom_point(aes(x = fil_algae_spatial, y = mean_chla), size = 1.2, shape = 16) +
+  # facet_wrap(~group) +
+  ylab('Mean chl a (µg/L)') +
+  # ylab(expression(paste("Mean summer\nchlorophyll a", " (", µ,"g ", L^-1,")")))+
+  xlab("Fil. algae (wet mass per rake throw)")+
+  theme_bw(base_size = 9)
 
 # Load SEM plot and combine 
+design <- "AC
+           BC"
+
 sem_image <- ggdraw() + draw_image("figures/FigureSEM_P.png")
-z1 + sem_image + 
-  plot_layout(widths = c(1,1.5)) +  # side-by-side
+
+z1 + z2 + sem_image +
+  plot_layout(design = design) +
+  # plot_layout(widths = c(1,1.5)) +  # side-by-side
   plot_annotation(tag_levels = 'a', tag_prefix = "(", tag_suffix = ")") &
   theme(plot.tag = element_text(size = 8))
 ggsave("figures/Figure5.png", width = 6.5, height = 3, units = 'in', dpi = 500)

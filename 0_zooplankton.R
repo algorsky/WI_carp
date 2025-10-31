@@ -75,6 +75,10 @@ ggplot(zoops_year) +
   geom_point(aes(x = year, density)) +
   facet_wrap(~group)
 
+zoops_join = zoops_year %>% 
+  group_by(year) %>% 
+  summarise(density = sum(density, na.rm = T))
+
 # # Join with chlorophyll? 
 # a = zoops_all |> left_join(chloro_all)
 # ggplot(a) +

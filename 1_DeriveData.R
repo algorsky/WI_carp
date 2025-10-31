@@ -138,7 +138,8 @@ arb.spring <- arb.precip |>
 ls7 = read_csv('data/LS7_redblue_timeseries_export.csv') |> 
   dplyr::select(sampledate = date, redblue = mean) |> 
   filter(month(sampledate) %in% usemonths) |> 
-  mutate(removal = ifelse(year(sampledate) < 2008, "<2008", ">=2008"))
+  mutate(removal = ifelse(year(sampledate) < 2008, "<2008", ">=2008")) %>% 
+  arrange(sampledate)
 
 #################### Summary means ####################
 

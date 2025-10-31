@@ -33,9 +33,19 @@ bathy = st_read('data/map/Wingra_bathymetry_2025.shp') %>%
   mutate(area_per = as.numeric(area/sum(area))) %>% 
   rename(depth = Depth_m) 
 
+# Create all possible combinations
+transect <- c(2, 5, 7, 9, 11)
+depth <- c(1, 1.5, 2, 2.5, 3, 3.5, 4)
+year4 = c(1995:2019, 2022:2024)
+rep = 1:4
+combinations <- expand.grid(year4 = year4, transect = transect, depth = depth, rep = rep)
+
+
 # Convert data to area depth
-benthic_spatial = macrophyte_ntl %>%
+benthic_spatial = macrophyte_ntl %>% 
+  full_join(combinations) %>%
   mutate(fil_algae_wt = replace_na(fil_algae_wt, 0)) %>%
+  mutate(plant_wt_hand = replace_na(plant_wt_hand, 0)) %>%
   filter(transect %in% c(2,5,7,9,11)) %>% 
   mutate(depth = floor(depth)) %>%
   group_by(year4, depth) %>% 
@@ -62,14 +72,16 @@ benthic_spatial_year = benthic_spatial %>%
 # p1/p2
 # 
 p1 = ggplot(benthic_spatial) +
-  geom_col(aes(x = year4, y = fil_algae_spatial, fill = as.factor(depth)))
+  geom_col(aes(x = year4, y = fil_algae_wt, fill = as.factor(depth)))
 
-p2 = ggplot(benthic_spatial, aes(x = year4, y = plant_wt_spatial,
+p2 = ggplot(benthic_spatial, aes(x = year4, y = plant_wt_hand,
                                  fill = as.factor(depth))) +
-  geom_col();p2
+  geom_col()
 
 p1/p2 + plot_layout(guides = 'collect')
 
 # Stats for paper 
-fil_algae_timeseries |> filter(year4 > 2008) |> summarise(min(fil_algae_mean), max(fil_algae_mean), sd(fil_algae_mean))
+fil_algae_timeseries |> filter(year4 > 2008) |> 
+  summarise(min(fil_algae_mean), max(fil_algae_mean), sd(fil_algae_mean),
+            min(plant_wt_mean), max(plant_wt_mean), sd(plant_wt_mean))
 
