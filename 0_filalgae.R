@@ -1,5 +1,7 @@
 library(tidyverse)
 library(ggpattern)
+library(sf)
+
 # Download data from EDI
 # North Temperate Lakes LTER: Macrophyte Biomass - Madison Lakes Area 1995 - current
 inUrl1  <- "https://pasta.lternet.edu/package/data/eml/knb-lter-ntl/24/32/a03d18be68db4cf2280846afe2643d5e" 
@@ -62,15 +64,7 @@ benthic_spatial_year = benthic_spatial %>%
             plant_wt_spatial = sum(plant_wt_spatial, na.rm = T)) %>% 
   mutate(removal = ifelse(year4 < 2008, '< 2008', '≥ 2008'))
 
-#write_csv(fil_algae_timeseries, "data/fil_algae_timeseries.csv")
-
-# p1 = ggplot(fil_algae_timeseries) +
-#   geom_col(aes(x = year4, y = fil_algae_mean))
-# 
-# p2 = ggplot(fil_algae_timeseries) +
-#   geom_col(aes(x = year4, y = plant_wt_mean), fill = 'darkgreen')
-# p1/p2
-# 
+# Check plot  
 p1 = ggplot(benthic_spatial) +
   geom_col(aes(x = year4, y = fil_algae_wt, fill = as.factor(depth)))
 
@@ -81,7 +75,7 @@ p2 = ggplot(benthic_spatial, aes(x = year4, y = plant_wt_hand,
 p1/p2 + plot_layout(guides = 'collect')
 
 # Stats for paper 
-fil_algae_timeseries |> filter(year4 > 2008) |> 
-  summarise(min(fil_algae_mean), max(fil_algae_mean), sd(fil_algae_mean),
-            min(plant_wt_mean), max(plant_wt_mean), sd(plant_wt_mean))
+benthic_spatial |> filter(year4 > 2008) |> 
+  summarise(min(fil_algae_wt), max(fil_algae_wt), sd(fil_algae_wt),
+            min(plant_wt_hand), max(plant_wt_hand), sd(plant_wt_hand))
 

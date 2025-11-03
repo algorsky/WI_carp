@@ -49,7 +49,7 @@ summary(gls_plant)
 gls_algae <- gls(fil_algae_spatial ~ removal, data = summary_means |> filter(!is.na(fil_algae_spatial)))
 summary(gls_algae)
 
-# Means before and after
+# Medians before and after
 summary_means |> 
   group_by(removal) |> 
   summarise_all(median, na.rm = T)

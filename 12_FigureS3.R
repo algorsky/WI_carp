@@ -11,4 +11,4 @@ ggplot(secchi.may, aes(x = year4, y = secnview)) +
   theme(legend.position = "none", 
       axis.title.x = element_blank())
 
-ggsave('figures/FigureS2.png', width = 4, height = 2, dpi = 500)
+ggsave('figures/FigureS3.png', width = 4, height = 2, dpi = 500)
